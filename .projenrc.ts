@@ -1,4 +1,4 @@
-import { github, release, typescript } from 'projen';
+import { github, javascript, release, typescript } from 'projen';
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
 
@@ -45,6 +45,7 @@ const project = new typescript.TypeScriptProject({
   // Release
   release: true,
   releaseToNpm: true,
+  npmAccess: javascript.NpmAccess.PUBLIC,
   defaultReleaseBranch: 'main',
   releaseTrigger: release.ReleaseTrigger.scheduled({
     schedule: '0 5 1 * *',
@@ -61,5 +62,12 @@ const project = new typescript.TypeScriptProject({
 project
   .tryFindObjectFile('package.json')
   ?.addOverride('peerDependencies', { projen: 'x.x.x' });
+
+project.npmignore?.addPatterns(
+  '.gitattributes',
+  '.prettierignore',
+  '.prettierrc.json',
+  '.projenrc.ts'
+);
 
 project.synth();
