@@ -44,7 +44,6 @@ const project = new typescript.TypeScriptProject({
 
   // Release
   defaultReleaseBranch: 'main',
-  release: false,
   releaseTrigger: release.ReleaseTrigger.scheduled({
     schedule: '0 5 1 * *',
   }),
