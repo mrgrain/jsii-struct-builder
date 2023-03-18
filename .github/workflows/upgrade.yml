@@ -39,6 +39,12 @@ jobs:
       contents: read
     if: ${{ needs.upgrade.outputs.patch_created }}
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c
+        with:
+          app_id: ${{ secrets.PROJEN_APP_ID }}
+          private_key: ${{ secrets.PROJEN_APP_PRIVATE_KEY }}
       - name: Checkout
         uses: actions/checkout@v3
         with: {}
@@ -57,7 +63,7 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           commit-message: |-
             chore(deps): upgrade dependencies
 
@@ -70,6 +76,7 @@ jobs:
             *Automatically created by projen via the "upgrade" workflow*
           branch: github-actions/upgrade
           title: "chore(deps): upgrade dependencies"
+          labels: auto-approve
           body: |-
             Upgrades project dependencies. See details in [workflow run].
 
