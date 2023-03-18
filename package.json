@@ -18,6 +18,12 @@
     "watch": "npx projen watch",
     "projen": "npx projen"
   },
+  "author": {
+    "name": "Momo Kornher",
+    "email": "mail@moritzkornher.de",
+    "url": "https://moritzkornher.de",
+    "organization": false
+  },
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^14",
