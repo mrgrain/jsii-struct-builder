@@ -53,5 +53,12 @@ const project = new typescript.TypeScriptProject({
   deps: ['@jsii/spec'],
   devDeps: ['projen'],
   peerDeps: ['projen'],
+  peerDependencyOptions: {
+    pinnedDevDependency: false,
+  },
 });
+project
+  .tryFindObjectFile('package.json')
+  ?.addOverride('peerDependencies', { projen: 'x.x.x' });
+
 project.synth();
