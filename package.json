@@ -1,6 +1,10 @@
 {
   "name": "@mrgrain/jsii-extend-interface",
-  "description": "Make working with jsii interfaces great again",
+  "description": "A projen component to easily extend and adapt existing jsii interfaces",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrgrain/jsii-extend-interface"
+  },
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
@@ -56,6 +60,7 @@
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/mrgrain/jsii-extend-interface",
   "publishConfig": {
     "access": "public"
   },

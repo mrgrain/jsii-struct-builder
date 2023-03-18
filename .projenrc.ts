@@ -4,10 +4,13 @@ const project = new typescript.TypeScriptProject({
 
   // Project info
   name: '@mrgrain/jsii-extend-interface',
-  description: 'Make working with jsii interfaces great again',
+  description:
+    'A projen component to easily extend and adapt existing jsii interfaces',
   authorName: 'Momo Kornher',
   authorEmail: 'mail@moritzkornher.de',
   authorUrl: 'https://moritzkornher.de',
+  repository: 'https://github.com/mrgrain/jsii-extend-interface',
+  homepage: 'https://github.com/mrgrain/jsii-extend-interface',
   sampleCode: false,
 
   // TypeScript
