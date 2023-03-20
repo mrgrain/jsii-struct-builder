@@ -46,7 +46,7 @@
     "jest-junit": "^13",
     "npm-check-updates": "^16",
     "prettier": "^2.8.4",
-    "projen": "^0.68.12",
+    "projen": "^0.68.13",
     "standard-version": "^9",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
