@@ -46,7 +46,7 @@
     "jest-junit": "^15",
     "npm-check-updates": "^16",
     "prettier": "^2.8.6",
-    "projen": "^0.69.4",
+    "projen": "^0.69.5",
     "standard-version": "^9",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
@@ -56,7 +56,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.78.1"
+    "@jsii/spec": "^1.79.0"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
