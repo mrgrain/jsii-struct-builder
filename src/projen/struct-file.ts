@@ -1,26 +1,23 @@
 import { InterfaceType } from '@jsii/spec';
 import { Project, SourceCodeOptions, TextFile } from 'projen';
-import {
-  TypeScriptRenderer,
-  TypeScriptRendererOptions,
-} from './typescript-renderer';
+import { TypeScriptRenderer, TypeScriptRendererOptions } from '../renderer';
 
 /**
  * Options for `JsiiStructFile`.
  */
-export interface JsiiStructFileOptions
+export interface StructFileOptions
   extends TypeScriptRendererOptions,
     SourceCodeOptions {}
 
 /**
  * A Jsii Struct rendered as TypeScript interface
  */
-export class JsiiStructFile extends TextFile {
+export class StructFile extends TextFile {
   public constructor(
     project: Project,
     filePath: string,
     spec: InterfaceType,
-    options: JsiiStructFileOptions = {}
+    options: StructFileOptions = {}
   ) {
     super(project, filePath, options);
 

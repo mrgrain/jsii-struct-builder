@@ -9,6 +9,7 @@ import {
   Property,
   TypeReference,
 } from '@jsii/spec';
+import { compareLowerCase, comparePath } from '../private';
 
 /**
  * Options for `TypeScriptRenderer`.
@@ -63,15 +64,14 @@ export class TypeScriptRenderer {
 
   protected renderImports(modules: Map<string, Set<string>>) {
     Array.from(modules.keys())
-      .sort((a, b) => {
-        if (a[0] < b[0]) {
-          return 1;
-        }
-        return a.localeCompare(b);
-      })
+      .sort(comparePath)
       .forEach((mod) => {
         const imports = Array.from(modules.get(mod)?.values() || []);
-        this.buffer.line(`import { ${imports.join(', ')} } from '${mod}';`);
+        this.buffer.line(
+          `import { ${imports
+            .sort(compareLowerCase)
+            .join(', ')} } from '${mod}';`
+        );
       });
   }
 
