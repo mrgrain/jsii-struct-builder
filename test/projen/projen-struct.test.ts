@@ -7,7 +7,7 @@ import {
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { Struct, ProjenStruct } from '../../src';
 
-test('can extend an interface', () => {
+test('can mixin a struct', () => {
   // ARRANGE
   const project = new TestProject();
 
@@ -16,6 +16,30 @@ test('can extend an interface', () => {
     name: 'MyInterface',
   });
   struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toMatchSnapshot();
+  expect(renderedFile).toContain('projenCodeDir');
+  expect(renderedFile).toContain('filename');
+});
+
+test('can mixin another projen struct', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const base = new ProjenStruct(project, {
+    name: 'MyBaseInterface',
+  });
+  base.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
+
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct.mixin(base);
 
   // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
@@ -43,6 +67,26 @@ test('can omit props', () => {
 
   // ASSERT
   expect(renderedFile).not.toContain('projenCodeDir');
+  expect(renderedFile).not.toContain('filename');
+});
+
+test('can keep only some props', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct
+    .mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'))
+    .only('projenCodeDir');
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('projenCodeDir');
   expect(renderedFile).not.toContain('filename');
 });
 
