@@ -1,2 +1,2 @@
-export * from './struct-builder';
-export * from './struct-file';
+export * from './projen-struct';
+export * from './ts-interface';
