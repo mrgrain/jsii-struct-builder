@@ -9,12 +9,11 @@ import {
   Property,
   TypeReference,
 } from '@jsii/spec';
-import { Project, SourceCode, SourceCodeOptions } from 'projen';
 
 /**
- * Options for `InterfaceFile`.
+ * Options for `TypeScriptRenderer`.
  */
-export interface InterfaceFileOptions extends SourceCodeOptions {
+export interface TypeScriptRendererOptions {
   /**
    * The module locations assemblies should be imported from
    *
@@ -29,28 +28,37 @@ export interface InterfaceFileOptions extends SourceCodeOptions {
    * local imports traverse up a number of levels equivalent to the number of fqn parts
    */
   importLocations?: Record<string, string>;
+
+  /**
+   * Indentation size
+   *
+   * @default 2
+   */
+  readonly indent?: number;
 }
 
 /**
- * A TypeScript interface
+ * Jsii to TypeScript renderer
  */
-export class InterfaceFile extends SourceCode {
-  public constructor(
-    project: Project,
-    filePath: string,
-    private readonly spec: InterfaceType,
-    options: InterfaceFileOptions = {}
-  ) {
-    super(project, filePath, options);
+export class TypeScriptRenderer {
+  private buffer: CodeBuffer;
 
-    this.line(`// ${this.marker}`);
-    this.renderImports(extractImports(spec, options.importLocations));
-    this.line();
+  public constructor(private options: TypeScriptRendererOptions = {}) {
+    this.buffer = new CodeBuffer(' '.repeat(options.indent ?? 2));
+  }
+
+  public renderStruct(spec: InterfaceType): string {
+    this.buffer.flush();
+
+    this.renderImports(extractImports(spec, this.options.importLocations));
+    this.buffer.line();
     this.renderDocBlock(docsToLines(spec.docs));
-    this.open(`export interface ${spec.name} {`);
-    spec.properties?.forEach((p) => this.renderProperty(p));
-    this.close('}');
-    this.line();
+    this.buffer.open(`export interface ${spec.name} {`);
+    spec.properties?.forEach((p) => this.renderProperty(p, spec.fqn));
+    this.buffer.close('}');
+    this.buffer.line();
+
+    return this.buffer.flush().join('\n');
   }
 
   protected renderImports(modules: Map<string, Set<string>>) {
@@ -63,18 +71,18 @@ export class InterfaceFile extends SourceCode {
       })
       .forEach((mod) => {
         const imports = Array.from(modules.get(mod)?.values() || []);
-        this.line(`import { ${imports.join(', ')} } from '${mod}';`);
+        this.buffer.line(`import { ${imports.join(', ')} } from '${mod}';`);
       });
   }
 
-  protected renderProperty(p: Property) {
+  protected renderProperty(p: Property, containingFqn: string) {
     if (p.docs) {
       this.renderDocBlock(docsToLines(p.docs));
     }
-    this.line(
+    this.buffer.line(
       `readonly ${p.name}${p.optional ? '?' : ''}: ${typeRefToType(
         p.type,
-        this.spec.fqn
+        containingFqn
       )};`
     );
   }
@@ -84,9 +92,52 @@ export class InterfaceFile extends SourceCode {
       return;
     }
 
-    this.line('/**');
-    lines.forEach((line) => this.line(` * ${line}`));
-    this.line(' */');
+    this.buffer.line('/**');
+    lines.forEach((line) => this.buffer.line(` * ${line}`));
+    this.buffer.line(' */');
+  }
+}
+
+class CodeBuffer {
+  private lines = new Array<string>();
+  private indentLevel = 0;
+
+  public constructor(private readonly indent = ' ') {}
+
+  public flush(): string[] {
+    const current = this.lines;
+    this.reset();
+
+    return current;
+  }
+
+  public line(code?: string) {
+    const prefix = this.indent.repeat(this.indentLevel);
+    this.lines.push((prefix + (code ?? '')).trimEnd());
+  }
+
+  public open(code?: string) {
+    if (code) {
+      this.line(code);
+    }
+
+    this.indentLevel++;
+  }
+
+  public close(code?: string) {
+    if (this.indentLevel === 0) {
+      throw new Error('Cannot decrease indent level below zero');
+    }
+    this.indentLevel--;
+
+    if (code) {
+      this.line(code);
+    }
+  }
+
+  private reset(): void {
+    this.lines = new Array<string>();
+    this.indentLevel = 0;
   }
 }
 

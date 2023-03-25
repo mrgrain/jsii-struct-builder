@@ -5,14 +5,14 @@ import {
   TypeScriptProjectOptions,
 } from 'projen/lib/typescript';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { JsiiInterface } from '../src/jsii-interface';
+import { JsiiStructBuilder } from '../src';
 
 test('can extend an interface', () => {
   // Arrange
   const project = new TestProject();
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',
   });
@@ -27,7 +27,7 @@ test('can omit props', () => {
   const project = new TestProject();
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',
     omitProps: ['projenCodeDir', 'filename'],
@@ -44,7 +44,7 @@ test('can overwrite props', () => {
   const project = new TestProject();
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',
     props: {
@@ -66,7 +66,7 @@ test('can update props', () => {
   const project = new TestProject();
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',
     updateProps: {
@@ -95,7 +95,7 @@ test('can import type from the same package at the top level', () => {
   });
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
     props: {
@@ -124,7 +124,7 @@ test('can import type from the same package when nested', () => {
   });
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     fqn: 'test.one.two.three.MyInterface',
     props: {
@@ -156,7 +156,7 @@ test("can import type from the same package when in a location that's not matchi
   });
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     fqn: 'test.one.two.three.MyInterface',
     filePath: join(project.srcdir, 'sub', 'MyInterface.ts'),
@@ -186,7 +186,7 @@ test('can import type from an other package', () => {
   });
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',
@@ -211,7 +211,7 @@ test('can override import locations', () => {
   });
 
   // ACT
-  new JsiiInterface(project, {
+  new JsiiStructBuilder(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
     extends: 'projen.typescript.ProjenrcOptions',

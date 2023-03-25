@@ -1,16 +1,16 @@
 import { InterfaceType, TypeKind } from '@jsii/spec';
 import { Project } from 'projen';
 import { synthSnapshot } from 'projen/lib/util/synth';
+import { JsiiStructFile } from '../src';
 import { findInterface } from '../src/assembly';
-import { InterfaceFile } from '../src/interface-file';
 
-test('can render an interface', () => {
+test('can render a struct', () => {
   // Arrange
   const project = new TestProject();
   const spec = findInterface('projen.typescript.TypeScriptProjectOptions');
 
   // ACT
-  new InterfaceFile(project, 'interface.ts', spec);
+  new JsiiStructFile(project, 'interface.ts', spec);
   const renderedFile = synthSnapshot(project)['interface.ts'];
 
   // ASSERT
@@ -23,7 +23,7 @@ test('will include properties from all parents', () => {
   const spec = findInterface('projen.typescript.TypeScriptProjectOptions');
 
   // ACT
-  new InterfaceFile(project, 'interface.ts', spec);
+  new JsiiStructFile(project, 'interface.ts', spec);
   const renderedFile = synthSnapshot(project)['interface.ts'];
 
   // ASSERT
@@ -40,7 +40,7 @@ test('can import from an external package', () => {
 
   // ACT
   spec.fqn = 'mypackage.Interface';
-  new InterfaceFile(project, 'interface.ts', spec);
+  new JsiiStructFile(project, 'interface.ts', spec);
   const renderedFile = synthSnapshot(project)['interface.ts'];
 
   // ASSERT
@@ -65,7 +65,7 @@ test('can import from the same package', () => {
   };
 
   // ACT
-  new InterfaceFile(project, 'interface.ts', spec);
+  new JsiiStructFile(project, 'interface.ts', spec);
   const renderedFile = synthSnapshot(project)['interface.ts'];
 
   // ASSERT
@@ -81,7 +81,7 @@ test('can override package imports', () => {
   );
 
   // ACT
-  new InterfaceFile(project, 'interface.ts', spec, {
+  new JsiiStructFile(project, 'interface.ts', spec, {
     importLocations: {
       projen: 'banana',
     },

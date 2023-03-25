@@ -2,9 +2,9 @@ import { dirname, join, posix } from 'path';
 import { InterfaceType, Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
 import { findInterface } from './assembly';
-import { InterfaceFile } from './interface-file';
+import { JsiiStructFile } from './jsii-struct-file';
 
-export interface JsiiInterfaceOptions {
+export interface JsiiStructBuilderOptions {
   /**
    * The name of the interface
    */
@@ -76,10 +76,10 @@ export interface JsiiInterfaceOptions {
 /**
  * A component generating a jsii-compatible interface
  */
-export class JsiiInterface extends Component {
+export class JsiiStructBuilder extends Component {
   public constructor(
     project: typescript.TypeScriptProject,
-    options: JsiiInterfaceOptions
+    options: JsiiStructBuilderOptions
   ) {
     super(project);
 
@@ -136,7 +136,7 @@ export class JsiiInterface extends Component {
 
     const baseDir = project.srcdir ?? project.outdir;
     const outputFile = options.filePath ?? join(baseDir, fqnToPath(fqn));
-    new InterfaceFile(project, outputFile, targetSpec, {
+    new JsiiStructFile(project, outputFile, targetSpec, {
       importLocations: {
         [assembly]: relativeImport(outputFile, baseDir),
         ...options.importLocations,
