@@ -1,4 +1,4 @@
-import { github, javascript, release, typescript } from 'projen';
+import { github, javascript, release, TextFile, typescript } from 'projen';
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
 
@@ -12,7 +12,8 @@ const project = new typescript.TypeScriptProject({
   homepage: 'https://github.com/mrgrain/jsii-struct-builder',
   sampleCode: false,
 
-  // TypeScript
+  // Node & TypeScript config
+  minNodeVersion: '18.0.0',
   tsconfig: {
     compilerOptions: {
       lib: ['es2022'],
@@ -71,5 +72,8 @@ project.npmignore?.addPatterns(
   '.prettierrc.json',
   '.projenrc.ts'
 );
+
+new TextFile(project, '.nvmrc', { lines: ['v18'] });
+new TextFile(project, '.node-version', { lines: ['v18'] });
 
 project.synth();

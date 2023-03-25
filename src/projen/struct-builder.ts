@@ -1,10 +1,11 @@
 import { dirname, join, posix } from 'path';
-import { InterfaceType, Property, TypeKind } from '@jsii/spec';
+import { Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
-import { findInterface } from './assembly';
-import { InterfaceFile } from './interface-file';
+import { StructFile } from './struct-file';
+import { JsiiStructBuilder } from '../jsii-struct-builder';
+import { findInterface } from '../private/assembly';
 
-export interface JsiiInterfaceOptions {
+export interface StructBuilderOptions {
   /**
    * The name of the interface
    */
@@ -76,21 +77,19 @@ export interface JsiiInterfaceOptions {
 /**
  * A component generating a jsii-compatible interface
  */
-export class JsiiInterface extends Component {
+export class StructBuilder extends Component {
+  private builder: JsiiStructBuilder;
+
   public constructor(
     project: typescript.TypeScriptProject,
-    options: JsiiInterfaceOptions
+    options: StructBuilderOptions
   ) {
     super(project);
 
-    const properties = Object.entries(options.props || {}).map(([name, p]) => ({
-      name,
-      ...p,
-    }));
-
     const fqn = options.fqn ?? `${project.name}.${options.name}`;
     const assembly = fqn.split('.').at(0) ?? project.name;
-    const targetSpec: InterfaceType = {
+
+    this.builder = new JsiiStructBuilder({
       kind: TypeKind.Interface,
       assembly,
       fqn,
@@ -98,45 +97,29 @@ export class JsiiInterface extends Component {
       docs: {
         summary: options.description ?? options.name,
       },
-      properties,
-    };
+    });
+
+    const properties = propsMapToArray(options.props);
+    properties.forEach((p) => this.builder.add(p));
 
     if (options.extends) {
       const sourceSpec = findInterface(options.extends, true);
+      const sourceBuilder = new JsiiStructBuilder(sourceSpec);
+      const updated = propsMapToArray(options.updateProps);
+      updated.forEach((p) => sourceBuilder.update(p.name, p));
+
       const omit = [
         ...(options.omitProps || []),
         ...properties.map((p) => p.name),
       ];
-      targetSpec.properties!.push(
-        ...(sourceSpec.properties || [])
-          .map((p) => {
-            if (options.updateProps?.[p.name]) {
-              return {
-                ...p,
-                ...options.updateProps?.[p.name],
-                docs: {
-                  ...p.docs,
-                  ...options.updateProps?.[p.name].docs,
-                  custom: {
-                    ...p.docs?.custom,
-                    ...options.updateProps?.[p.name].docs?.custom,
-                  },
-                },
-              };
-            }
-            return p;
-          })
-          .filter((p) => !omit.includes(p.name))
-      );
-    }
+      omit.forEach((o) => sourceBuilder.omit(o));
 
-    targetSpec.properties = targetSpec.properties?.sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
+      sourceBuilder.get().properties?.forEach((p) => this.builder.add(p));
+    }
 
     const baseDir = project.srcdir ?? project.outdir;
     const outputFile = options.filePath ?? join(baseDir, fqnToPath(fqn));
-    new InterfaceFile(project, outputFile, targetSpec, {
+    new StructFile(project, outputFile, this.builder.get(), {
       importLocations: {
         [assembly]: relativeImport(outputFile, baseDir),
         ...options.importLocations,
@@ -144,6 +127,7 @@ export class JsiiInterface extends Component {
     });
   }
 }
+
 function relativeImport(from: string, target: string): string {
   const diff = posix.relative(dirname(from), target);
   if (!diff) {
@@ -154,4 +138,13 @@ function relativeImport(from: string, target: string): string {
 
 function fqnToPath(fqn: string): string {
   return join(...fqn.split('.').slice(1)) + '.ts';
+}
+
+function propsMapToArray<T extends object>(
+  props: Record<string, T> = {}
+): Array<T & { name: string }> {
+  return Object.entries(props).map(([name, p]) => ({
+    name,
+    ...p,
+  }));
 }
