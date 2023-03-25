@@ -4,18 +4,18 @@ import { Component, typescript } from 'projen';
 import { TypeScriptInterfaceFile } from './ts-interface';
 import { Struct, HasProperties, IStructBuilder } from '../builder';
 
-export interface JsiiStructOptions {
+export interface ProjenStructOptions {
   /**
-   * The name of the interface
+   * The name of the new struct
    */
   readonly name: string;
   /**
-   * Doc string for the interface
-   * @default - Interface name
+   * Doc string for the struct
+   * @default - struct name
    */
   readonly description?: string;
   /**
-   * The fqn of the interface
+   * The fqn of the struct
    *
    * Used to auto-add imports.
    * All referenced types are loaded based on the fqn hierarchy.
@@ -47,14 +47,17 @@ export interface JsiiStructOptions {
 }
 
 /**
- * A component generating a jsii-compatible interface
+ * A component generating a jsii-compatible struct
  */
-export class JsiiStruct extends Component implements IStructBuilder {
+export class ProjenStruct
+  extends Component
+  implements IStructBuilder, HasProperties
+{
   private builder: Struct;
 
   public constructor(
     private tsProject: typescript.TypeScriptProject,
-    private options: JsiiStructOptions
+    private options: ProjenStructOptions
   ) {
     super(tsProject);
 
@@ -101,6 +104,9 @@ export class JsiiStruct extends Component implements IStructBuilder {
   mixin(...sources: HasProperties[]): IStructBuilder {
     this.builder.mixin(...sources);
     return this;
+  }
+  public get properties(): Property[] {
+    return this.builder.properties;
   }
 }
 

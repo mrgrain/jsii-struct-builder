@@ -1,2 +1,2 @@
-export * from './jsii-struct';
+export * from './projen-struct';
 export * from './ts-interface';

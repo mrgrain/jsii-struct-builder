@@ -5,14 +5,14 @@ import {
   TypeScriptProjectOptions,
 } from 'projen/lib/typescript';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { Struct, JsiiStruct } from '../../src/';
+import { Struct, ProjenStruct } from '../../src';
 
 test('can extend an interface', () => {
   // ARRANGE
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
   });
   struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
@@ -31,7 +31,7 @@ test('can omit props', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
   });
   struct
@@ -51,7 +51,7 @@ test('can overwrite props', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
   });
   struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions')).add({
@@ -73,7 +73,7 @@ test('can update props', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
   });
   struct
@@ -101,7 +101,7 @@ test('can import type from the same package at the top level', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
   });
@@ -132,7 +132,7 @@ test('can import type from the same package when nested', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
     fqn: 'test.a.b.c.MyInterface',
   });
@@ -165,7 +165,7 @@ test("can import type from the same package when in a location that's not matchi
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
     fqn: 'test.one.two.three.MyInterface',
     filePath: join(project.srcdir, 'sub', 'MyInterface.ts'),
@@ -197,7 +197,7 @@ test('can import type from an other package', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
   });
@@ -221,7 +221,7 @@ test('can override import locations', () => {
   const project = new TestProject();
 
   // ACT
-  const struct = new JsiiStruct(project, {
+  const struct = new ProjenStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
     importLocations: {

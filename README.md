@@ -17,17 +17,15 @@ Install with:
 npm install --save-dev @mrgrain/jsii-struct-builder
 ```
 
-### Extending an Interface
+### Create from an existing Struct
 
-Use the jsii FQN to extend an existing interface.
+Use the jsii FQN to mix in an existing struct.
 Use `omit` to remove any properties you are not interested in.
 
 ```ts
-new JsiiInterface(project, {
-  name: 'MyProjectOptions',
-  extends: 'projen.typescript.TypeScriptProjectOptions',
-  omit: ['sampleCode', 'projenrcTs', 'projenrcTsOptions']
-});
+new ProjenStruct(project, { name: 'MyProjectOptions'})
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+  .omit('sampleCode', 'projenrcTs', 'projenrcTsOptions');
 ```
 
 ### Adding new Properties
@@ -37,58 +35,59 @@ Complex types can be used and will be imported using their FQN.
 Any existing properties of the same name will be replaced.
 
 ```ts
-new JsiiInterface(project, {
-  name: 'MyProjectOptions',
-  extends: 'projen.typescript.TypeScriptProjectOptions',
-  props:{
-    booleanSetting: {
+new ProjenStruct(project, { name: 'MyProjectOptions'})
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+  .add(
+    {
+      name: 'booleanSetting',
       type: { primitive: jsii.PrimitiveType.Boolean }
     },
-    complexSetting: {
+    {
+      name: 'complexSetting',
       type: { fqn: "my_project.SomeEnum" }
     }
-  }
-});
+  );
 ```
-
 
 ### Updating existing Properties
 
 Existing properties can be updated.
-The provided partial `@jsii/spec` definition will be merged (non-recursively) with the existing spec.
+The provided partial `@jsii/spec` definition will be deep merged with the existing spec.
+Updates can be also be used to rename properties.
 
 ```ts
-new JsiiInterface(project, {
-  name: 'MyProjectOptions',
-  extends: 'projen.typescript.TypeScriptProjectOptions',
-  updateProps:{
-    typescriptVersion: {
-      optional: false,
-    },
-    sampleCode: {
-      docs: {
+new ProjenStruct(project, { name: 'MyProjectOptions'})
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+  .update('typescriptVersion', { optional: false })
+  .update('sampleCode', {
+    docs: {
         summary: 'New summary',
         default: 'false',
       }
     }
-  }
-});
+  )
+  .update('eslint', { name: 'linter' });
 ```
 
 ### Advanced usage
 
-Extending an existing interface is optional.
-The component can be used to generated interfaces from scratch.
+`Struct` and `ProjenStruct` both share the same interface.
+This allows some advanced applications.
+
+For example you can manipulate the source for re-use:
 
 ```ts
-new JsiiInterface(project, {
-  name: 'MyProjectOptions',
-  props:{
-    complexSetting: {
-      type: { fqn: "my_project.SomeEnum" }
-    }
-  }
-});
+const base = Struct.fromFqn('projen.typescript.TypeScriptProjectOptions');
+base.omit('sampleCode', 'projenrcTs', 'projenrcTsOptions');
+```
+
+Or you can mix on `ProjenStruct` with another:
+
+```ts
+const foo = new ProjenStruct(project, { name: 'Foo'})
+const bar = new ProjenStruct(project, { name: 'Bar'})
+
+bar.mixin(foo);
 ```
 
 The default configuration makes assumptions about the new interface that are usually okay.
@@ -97,16 +96,14 @@ For more complex scenarios `fqn`, `filePath` and `importLocations` can be used t
 ```ts
 new JsiiInterface(project, {
   name: 'MyProjectOptions',
-  extends: 'projen.typescript.TypeScriptProjectOptions',
   fqn: 'my_project.nested.location.MyProjectOptions',
   filePath: 'src/nested/my-project-options.ts',
   importLocations: {
     'my_project': '../enums'
-  },
-  props:{
-    complexSetting: {
-      type: { fqn: "my_project.SomeEnum" }
-    }
   }
+})
+.add({
+  name: 'complexSetting',
+  type: { fqn: "my_project.SomeEnum" }
 });
 ```
