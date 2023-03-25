@@ -114,6 +114,14 @@ export class JsiiInterface extends Component {
               return {
                 ...p,
                 ...options.updateProps?.[p.name],
+                docs: {
+                  ...p.docs,
+                  ...options.updateProps?.[p.name].docs,
+                  custom: {
+                    ...p.docs?.custom,
+                    ...options.updateProps?.[p.name].docs?.custom,
+                  },
+                },
               };
             }
             return p;
