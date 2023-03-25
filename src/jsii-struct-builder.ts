@@ -1,4 +1,5 @@
 import { InterfaceType, Property } from '@jsii/spec';
+import structuredClone from '@ungap/structured-clone';
 
 /**
  * Build a jsii struct

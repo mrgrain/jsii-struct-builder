@@ -6,7 +6,11 @@
     },
     {
       "name": "@types/node",
-      "version": "^18",
+      "version": "^16",
+      "type": "build"
+    },
+    {
+      "name": "@types/ungap__structured-clone",
       "type": "build"
     },
     {
@@ -89,6 +93,10 @@
     },
     {
       "name": "@jsii/spec",
+      "type": "runtime"
+    },
+    {
+      "name": "@ungap/structured-clone",
       "type": "runtime"
     }
   ],
