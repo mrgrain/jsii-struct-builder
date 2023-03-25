@@ -84,6 +84,7 @@ test('can update props', () => {
   // ASSERT
   expect(renderedFile).toContain('New summary');
   expect(renderedFile).toContain('@stability stable');
+  expect(renderedFile).toContain('@default "projenrc"');
   expect(renderedFile).toMatchSnapshot();
 });
 

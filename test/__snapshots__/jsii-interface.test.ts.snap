@@ -38,6 +38,7 @@ export interface MyInterface {
   readonly filename?: string;
   /**
    * New summary
+   * @default "projenrc"
    * @stability stable
    */
   readonly projenCodeDir: string;
