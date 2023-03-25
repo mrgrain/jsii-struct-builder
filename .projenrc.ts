@@ -13,7 +13,6 @@ const project = new typescript.TypeScriptProject({
   sampleCode: false,
 
   // Node & TypeScript config
-  minNodeVersion: '18.0.0',
   tsconfig: {
     compilerOptions: {
       lib: ['es2022'],
@@ -55,8 +54,8 @@ const project = new typescript.TypeScriptProject({
   }),
 
   // Dependencies
-  deps: ['@jsii/spec'],
-  devDeps: ['projen'],
+  deps: ['@jsii/spec', '@ungap/structured-clone'],
+  devDeps: ['projen', '@types/ungap__structured-clone'],
   peerDeps: ['projen'],
   peerDependencyOptions: {
     pinnedDevDependency: false,

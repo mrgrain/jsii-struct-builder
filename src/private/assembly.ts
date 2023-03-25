@@ -7,6 +7,7 @@ import {
   Property,
   TypeKind,
 } from '@jsii/spec';
+import structuredClone from '@ungap/structured-clone';
 
 const assemblies: Record<string, Assembly> = {};
 
