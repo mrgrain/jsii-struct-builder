@@ -1,19 +1,20 @@
-# jsii-extend-interface
+# jsii-struct-builder
 
-A projen component to easily extend and adapt existing jsii interfaces.
+Build jsii structs with ease.
 
-Jsii doesn't support TypeScript [Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html) like `Partial` or `Omit`, making it difficult to extend existing interfaces.
-This component works around that limitation by generating a brand new interface based on the jsii specification of the extended interface and its parent interfaces.
+Jsii doesn't support TypeScript [Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html) like `Partial` or `Omit`, making it difficult to re-use existing [struct interfaces](https://aws.github.io/jsii/specification/2-type-system/#structs).
+With this package, you can work around that limitation and create brand new struct interfaces based on the jsii specification of any existing structs, their parents, and your custom specification.
 
-From jsii's perspective, these interfaces are completely new types. From a maintainer's perspective, they require the same minimal effort
-as utility types do. Everybody wins!
+From jsii's perspective, these structs are completely new types.
+From a maintainer's perspective, they require the same minimal effort as utility types do.
+Everybody wins!
 
 ## Usage
 
 Install with:
 
 ```console
-npm install --save-dev @mrgrain/jsii-extend-interface
+npm install --save-dev @mrgrain/jsii-struct-builder
 ```
 
 ### Extending an Interface

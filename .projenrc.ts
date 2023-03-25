@@ -3,14 +3,13 @@ const project = new typescript.TypeScriptProject({
   projenrcTs: true,
 
   // Project info
-  name: '@mrgrain/jsii-extend-interface',
-  description:
-    'A projen component to easily extend and adapt existing jsii interfaces',
+  name: '@mrgrain/jsii-struct-builder',
+  description: 'Build jsii structs with ease',
   authorName: 'Momo Kornher',
   authorEmail: 'mail@moritzkornher.de',
   authorUrl: 'https://moritzkornher.de',
-  repository: 'https://github.com/mrgrain/jsii-extend-interface',
-  homepage: 'https://github.com/mrgrain/jsii-extend-interface',
+  repository: 'https://github.com/mrgrain/jsii-struct-builder',
+  homepage: 'https://github.com/mrgrain/jsii-struct-builder',
   sampleCode: false,
 
   // TypeScript
