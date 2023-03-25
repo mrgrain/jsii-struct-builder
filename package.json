@@ -1,9 +1,9 @@
 {
-  "name": "@mrgrain/jsii-extend-interface",
-  "description": "A projen component to easily extend and adapt existing jsii interfaces",
+  "name": "@mrgrain/jsii-struct-builder",
+  "description": "Build jsii structs with ease",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mrgrain/jsii-extend-interface"
+    "url": "https://github.com/mrgrain/jsii-struct-builder"
   },
   "scripts": {
     "build": "npx projen build",
@@ -60,7 +60,7 @@
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/mrgrain/jsii-extend-interface",
+  "homepage": "https://github.com/mrgrain/jsii-struct-builder",
   "publishConfig": {
     "access": "public"
   },
