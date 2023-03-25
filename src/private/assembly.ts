@@ -35,7 +35,7 @@ function loadInterface(fqn: string) {
     throw `Expected ${fqn} to be an interface, but got: ${candidate?.kind}`;
   }
 
-  return candidate;
+  return structuredClone(candidate);
 }
 
 export function findInterface(

@@ -8,8 +8,10 @@ export class JsiiStructBuilder {
   private properties: Map<string, Property>;
 
   public constructor(base: InterfaceType) {
-    this.targetSpec = base;
-    this.properties = new Map(base.properties?.map((p) => [p.name, p]));
+    this.targetSpec = structuredClone(base);
+    this.properties = new Map(
+      base.properties?.map((p) => [p.name, structuredClone(p)])
+    );
   }
 
   /**
@@ -60,8 +62,11 @@ export class JsiiStructBuilder {
    * Get the current state of the builder
    */
   public get(): InterfaceType {
-    this.targetSpec.properties = Array.from(this.properties.values());
+    const properties = Array.from(this.properties.values());
 
-    return this.targetSpec;
+    return {
+      ...structuredClone(this.targetSpec),
+      properties,
+    };
   }
 }
