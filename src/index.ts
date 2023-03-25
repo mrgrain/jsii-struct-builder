@@ -1,5 +1,3 @@
-export * from './jsii-struct-builder';
-export * from './projen/struct-file';
+export * from './builder';
+export * from './projen';
 export * from './renderer/typescript';
-
-export * as projen from './projen';

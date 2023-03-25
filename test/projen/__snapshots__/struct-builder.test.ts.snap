@@ -8,17 +8,17 @@ exports[`can extend an interface 1`] = `
  */
 export interface MyInterface {
   /**
-   * The name of the projenrc file.
-   * @default ".projenrc.ts"
-   * @stability experimental
-   */
-  readonly filename?: string;
-  /**
    * A directory tree that may contain *.ts files that can be referenced from your projenrc typescript file.
    * @default "projenrc"
    * @stability experimental
    */
   readonly projenCodeDir?: string;
+  /**
+   * The name of the projenrc file.
+   * @default ".projenrc.ts"
+   * @stability experimental
+   */
+  readonly filename?: string;
 }
 "
 `;
@@ -31,17 +31,17 @@ exports[`can update props 1`] = `
  */
 export interface MyInterface {
   /**
-   * The name of the projenrc file.
-   * @default ".projenrc.ts"
-   * @stability experimental
-   */
-  readonly filename?: string;
-  /**
    * New summary
    * @default "projenrc"
    * @stability stable
    */
   readonly projenCodeDir: string;
+  /**
+   * The name of the projenrc file.
+   * @default ".projenrc.ts"
+   * @stability experimental
+   */
+  readonly filename?: string;
 }
 "
 `;

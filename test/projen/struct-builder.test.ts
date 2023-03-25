@@ -5,17 +5,19 @@ import {
   TypeScriptProjectOptions,
 } from 'projen/lib/typescript';
 import { synthSnapshot } from 'projen/lib/util/synth';
-import { StructBuilder } from '../../src/projen';
+import { Struct, JsiiStruct } from '../../src/';
 
 test('can extend an interface', () => {
-  // Arrange
+  // ARRANGE
   const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
   });
+  struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -25,15 +27,18 @@ test('can extend an interface', () => {
 });
 
 test('can omit props', () => {
-  // Arrange
+  // ARRANGE
   const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
-    omitProps: ['projenCodeDir', 'filename'],
   });
+  struct
+    .mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'))
+    .omit('projenCodeDir', 'filename');
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -42,21 +47,21 @@ test('can omit props', () => {
 });
 
 test('can overwrite props', () => {
-  // Arrange
+  // ARRANGE
   const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
-    props: {
-      projenCodeDir: {
-        type: {
-          primitive: PrimitiveType.Number,
-        },
-      },
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions')).add({
+    name: 'projenCodeDir',
+    type: {
+      primitive: PrimitiveType.Number,
     },
   });
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -64,23 +69,24 @@ test('can overwrite props', () => {
 });
 
 test('can update props', () => {
-  // Arrange
+  // ARRANGE
   const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
-    updateProps: {
-      projenCodeDir: {
-        docs: {
-          summary: 'New summary',
-          stability: Stability.Stable,
-        },
-        optional: false,
-      },
-    },
   });
+  struct
+    .mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'))
+    .update('projenCodeDir', {
+      docs: {
+        summary: 'New summary',
+        stability: Stability.Stable,
+      },
+      optional: false,
+    });
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -91,28 +97,30 @@ test('can update props', () => {
 });
 
 test('can import type from the same package at the top level', () => {
-  // Arrange
-  const project = new TestProject({
-    name: 'test',
-  });
+  // ARRANGE
+  const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
-    props: {
-      localProp: {
-        type: {
-          fqn: 'test.OtherInterface',
-        },
-      },
-      localNestedProp: {
-        type: {
-          fqn: 'test.more.OtherInterface',
-        },
+  });
+  struct.add(
+    {
+      name: 'localProp',
+      type: {
+        fqn: 'test.OtherInterface',
       },
     },
-  });
+    {
+      name: 'localNestedProp',
+      type: {
+        fqn: 'test.more.OtherInterface',
+      },
+    }
+  );
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -120,30 +128,31 @@ test('can import type from the same package at the top level', () => {
 });
 
 test('can import type from the same package when nested', () => {
-  // Arrange
-  const project = new TestProject({
-    name: 'test',
-  });
+  // ARRANGE
+  const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
-    fqn: 'test.one.two.three.MyInterface',
-    props: {
-      localProp: {
-        type: {
-          fqn: 'test.OtherInterface',
-        },
-      },
-      localNestedProp: {
-        type: {
-          fqn: 'test.more.OtherInterface',
-        },
+    fqn: 'test.a.b.c.MyInterface',
+  });
+  struct.add(
+    {
+      name: 'localProp',
+      type: {
+        fqn: 'test.OtherInterface',
       },
     },
-  });
-  const renderedFile =
-    synthSnapshot(project)['src/one/two/three/MyInterface.ts'];
+    {
+      name: 'localNestedProp',
+      type: {
+        fqn: 'test.more.OtherInterface',
+      },
+    }
+  );
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/a/b/c/MyInterface.ts'];
 
   // ASSERT
   expect(renderedFile).toContain(
@@ -152,29 +161,31 @@ test('can import type from the same package when nested', () => {
 });
 
 test("can import type from the same package when in a location that's not matching fqn levels", () => {
-  // Arrange
-  const project = new TestProject({
-    name: 'test',
-  });
+  // ARRANGE
+  const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
     fqn: 'test.one.two.three.MyInterface',
     filePath: join(project.srcdir, 'sub', 'MyInterface.ts'),
-    props: {
-      localProp: {
-        type: {
-          fqn: 'test.OtherInterface',
-        },
-      },
-      localNestedProp: {
-        type: {
-          fqn: 'test.more.OtherInterface',
-        },
+  });
+  struct.add(
+    {
+      name: 'localProp',
+      type: {
+        fqn: 'test.OtherInterface',
       },
     },
-  });
+    {
+      name: 'localNestedProp',
+      type: {
+        fqn: 'test.more.OtherInterface',
+      },
+    }
+  );
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/sub/MyInterface.ts'];
 
   // ASSERT
@@ -182,24 +193,23 @@ test("can import type from the same package when in a location that's not matchi
 });
 
 test('can import type from an other package', () => {
-  // Arrange
-  const project = new TestProject({
-    name: 'test',
-  });
+  // ARRANGE
+  const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
-    props: {
-      testProp: {
-        type: {
-          fqn: 'projen.typescript.TypeScriptProjectOptions',
-        },
-      },
+  });
+
+  struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions')).add({
+    name: 'testProp',
+    type: {
+      fqn: 'projen.typescript.TypeScriptProjectOptions',
     },
   });
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
@@ -207,44 +217,45 @@ test('can import type from an other package', () => {
 });
 
 test('can override import locations', () => {
-  // Arrange
-  const project = new TestProject({
-    name: 'test',
-  });
+  // ARRANGE
+  const project = new TestProject();
 
   // ACT
-  new StructBuilder(project, {
+  const struct = new JsiiStruct(project, {
     name: 'MyInterface',
     fqn: 'test.MyInterface',
-    extends: 'projen.typescript.ProjenrcOptions',
     importLocations: {
-      test: 'foobar',
+      foo: 'bar',
       projen: 'banana',
     },
-    props: {
-      localProp: {
-        type: {
-          fqn: 'test.OtherInterface',
-        },
-      },
-      localNestedProp: {
-        type: {
-          fqn: 'test.more.OtherInterface',
-        },
-      },
-      externalProp: {
-        type: {
-          fqn: 'projen.typescript.TypeScriptProjectOptions',
-        },
+  });
+
+  struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions')).add(
+    {
+      name: 'localProp',
+      type: {
+        fqn: 'foo.OtherInterface',
       },
     },
-  });
+    {
+      name: 'localNestedProp',
+      type: {
+        fqn: 'foo.more.OtherInterface',
+      },
+    },
+    {
+      name: 'externalProp',
+      type: {
+        fqn: 'projen.typescript.TypeScriptProjectOptions',
+      },
+    }
+  );
+
+  // PREPARE
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain(
-    "import { more, OtherInterface } from 'foobar';"
-  );
+  expect(renderedFile).toContain("import { more, OtherInterface } from 'bar';");
   expect(renderedFile).toContain("import { typescript } from 'banana';");
 });
 
