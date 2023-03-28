@@ -63,7 +63,6 @@ export class Struct implements IStructBuilder, HasProperties {
    *
    * @param fqn The jsii fqn of the source spec.
    * @param mergeParents Merge parent interfaces into the spec. Defaults to `true`.
-   * @param withStability Merge parent interfaces into the spec. Defaults to `true`.
    */
   public static fromFqn(fqn: string, mergeParents: boolean = true) {
     const source = findInterface(fqn, mergeParents);
