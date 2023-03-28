@@ -101,6 +101,10 @@ export class ProjenStruct
     this.builder.update(name, update);
     return this;
   }
+  updateAll(update: Partial<Property>): IStructBuilder {
+    this.builder.updateAll(update);
+    return this;
+  }
   mixin(...sources: HasProperties[]): IStructBuilder {
     this.builder.mixin(...sources);
     return this;

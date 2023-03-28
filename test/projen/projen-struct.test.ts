@@ -140,6 +140,28 @@ test('can update props', () => {
   expect(renderedFile).toMatchSnapshot();
 });
 
+test('can updateAll props', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions')).updateAll({
+    docs: {
+      stability: Stability.Stable,
+    },
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('@stability stable');
+  expect(renderedFile).toMatchSnapshot();
+});
+
 test('can import type from the same package at the top level', () => {
   // ARRANGE
   const project = new TestProject();
