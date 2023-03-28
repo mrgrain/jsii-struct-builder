@@ -29,6 +29,11 @@ export interface IStructBuilder {
   add(...props: Property[]): IStructBuilder;
 
   /**
+   * Update all existing properties
+   */
+  updateAll(update: Partial<Property>): IStructBuilder;
+
+  /**
    * Update an existing property
    */
   update(name: string, update: Partial<Property>): IStructBuilder;
@@ -58,6 +63,7 @@ export class Struct implements IStructBuilder, HasProperties {
    *
    * @param fqn The jsii fqn of the source spec.
    * @param mergeParents Merge parent interfaces into the spec. Defaults to `true`.
+   * @param withStability Merge parent interfaces into the spec. Defaults to `true`.
    */
   public static fromFqn(fqn: string, mergeParents: boolean = true) {
     const source = findInterface(fqn, mergeParents);
@@ -154,6 +160,16 @@ export class Struct implements IStructBuilder, HasProperties {
     };
 
     return this.add(updatedProp);
+  }
+
+  /**
+   * Update all existing properties
+   */
+  public updateAll(update: Partial<Property>) {
+    for (const propertyKey of this._properties.keys()) {
+      this.update(propertyKey, update);
+    }
+    return this;
   }
 
   /**
