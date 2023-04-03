@@ -47,6 +47,13 @@ export interface IStructBuilder {
   mixin(...sources: HasProperties[]): IStructBuilder;
 }
 
+export interface StructProperty extends Partial<Property> {
+  /**
+   * Reference to Struct Property
+   */
+  struct: Struct;
+}
+
 /**
  * Build a jsii struct
  */
@@ -182,6 +189,23 @@ export class Struct implements IStructBuilder, HasProperties {
       this.add(...(source.properties || []));
     }
 
+    return this;
+  }
+
+  /**
+   * Nests a Struct within this struct
+   * @param name name of the nested property
+   * @param property struct to be nested
+   * @returns reference to itself
+   */
+  public nest(name: string, property: StructProperty) {
+    this._properties.set(name, {
+      name,
+      type: {
+        fqn: property.struct._base.fqn,
+      },
+    });
+    this.update(name, property);
     return this;
   }
 

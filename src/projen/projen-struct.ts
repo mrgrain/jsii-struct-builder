@@ -47,6 +47,16 @@ export interface ProjenStructOptions {
 }
 
 /**
+ * Options for a nested Projen Struct
+ */
+export interface NestedProjenStructOptions extends Partial<Property> {
+  /**
+   * The Struct with the property
+   */
+  struct: ProjenStruct;
+}
+
+/**
  * A component generating a jsii-compatible struct
  */
 export class ProjenStruct
@@ -107,6 +117,11 @@ export class ProjenStruct
   }
   mixin(...sources: HasProperties[]): IStructBuilder {
     this.builder.mixin(...sources);
+    return this;
+  }
+  nest(name: string, property: NestedProjenStructOptions): IStructBuilder {
+    const { struct, ...rest } = property;
+    this.builder.nest(name, { struct: struct.builder, ...rest });
     return this;
   }
   public get properties(): Property[] {
