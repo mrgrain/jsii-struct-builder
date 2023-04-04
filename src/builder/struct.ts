@@ -1,4 +1,4 @@
-import { InterfaceType, Property, TypeKind } from '@jsii/spec';
+import { FQN, InterfaceType, Property, TypeKind } from '@jsii/spec';
 import structuredClone from '@ungap/structured-clone';
 import { findInterface } from '../private';
 
@@ -7,6 +7,16 @@ import { findInterface } from '../private';
  */
 export interface HasProperties {
   properties?: Property[];
+}
+
+/**
+ * Something that has FQN
+ */
+export interface NamedTypeReference {
+  /**
+   * The fully-qualified-name of the type (can be located in the
+   */
+  fqn: FQN;
 }
 
 export interface IStructBuilder {
@@ -50,7 +60,9 @@ export interface IStructBuilder {
 /**
  * Build a jsii struct
  */
-export class Struct implements IStructBuilder, HasProperties {
+export class Struct
+  implements IStructBuilder, HasProperties, NamedTypeReference
+{
   /**
    * Create a builder from an jsii spec
    */
@@ -202,5 +214,12 @@ export class Struct implements IStructBuilder, HasProperties {
    */
   public get properties(): Property[] {
     return this.spec.properties ?? [];
+  }
+
+  /**
+   * Get the FQN for the builder
+   */
+  public get fqn(): FQN {
+    return this._base.fqn;
   }
 }

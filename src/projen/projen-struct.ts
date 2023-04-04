@@ -1,8 +1,13 @@
 import { dirname, join, posix } from 'path';
-import { Property, TypeKind } from '@jsii/spec';
+import { FQN, Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
 import { TypeScriptInterfaceFile } from './ts-interface';
-import { Struct, HasProperties, IStructBuilder } from '../builder';
+import {
+  Struct,
+  HasProperties,
+  IStructBuilder,
+  NamedTypeReference,
+} from '../builder';
 
 export interface ProjenStructOptions {
   /**
@@ -51,7 +56,7 @@ export interface ProjenStructOptions {
  */
 export class ProjenStruct
   extends Component
-  implements IStructBuilder, HasProperties
+  implements IStructBuilder, HasProperties, NamedTypeReference
 {
   private builder: Struct;
 
@@ -111,6 +116,9 @@ export class ProjenStruct
   }
   public get properties(): Property[] {
     return this.builder.properties;
+  }
+  public get fqn(): FQN {
+    return this.builder.fqn;
   }
 }
 
