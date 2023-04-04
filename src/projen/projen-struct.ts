@@ -1,8 +1,13 @@
 import { dirname, join, posix } from 'path';
-import { Property, TypeKind } from '@jsii/spec';
+import { FQN, Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
 import { TypeScriptInterfaceFile } from './ts-interface';
-import { Struct, HasProperties, IStructBuilder } from '../builder';
+import {
+  Struct,
+  HasProperties,
+  IStructBuilder,
+  NamedTypeReference,
+} from '../builder';
 
 export interface ProjenStructOptions {
   /**
@@ -47,21 +52,11 @@ export interface ProjenStructOptions {
 }
 
 /**
- * Options for a nested Projen Struct
- */
-export interface NestedProjenStructOptions extends Partial<Property> {
-  /**
-   * The Struct with the property
-   */
-  struct: ProjenStruct;
-}
-
-/**
  * A component generating a jsii-compatible struct
  */
 export class ProjenStruct
   extends Component
-  implements IStructBuilder, HasProperties
+  implements IStructBuilder, HasProperties, NamedTypeReference
 {
   private builder: Struct;
 
@@ -119,13 +114,11 @@ export class ProjenStruct
     this.builder.mixin(...sources);
     return this;
   }
-  nest(name: string, property: NestedProjenStructOptions): IStructBuilder {
-    const { struct, ...rest } = property;
-    this.builder.nest(name, { struct: struct.builder, ...rest });
-    return this;
-  }
   public get properties(): Property[] {
     return this.builder.properties;
+  }
+  public get fqn(): FQN {
+    return this.builder.fqn;
   }
 }
 

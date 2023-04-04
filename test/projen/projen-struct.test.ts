@@ -325,7 +325,7 @@ test('can override import locations', () => {
   expect(renderedFile).toContain("import { typescript } from 'banana';");
 });
 
-test('can nest one struct within another', () => {
+test('can add one struct within another', () => {
   // ARRANGE
   const project = new TestProject();
 
@@ -341,8 +341,9 @@ test('can nest one struct within another', () => {
     .mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'))
     .update('filename', { docs: { default: '.projenRC.ts' } });
 
-  base.nest('projenrcTsOptions', {
-    struct: nestedStruct,
+  base.add({
+    name: 'projenrcTsOptions',
+    type: nestedStruct,
     docs: {
       summary: 'My new Summary',
     },
@@ -358,7 +359,47 @@ test('can nest one struct within another', () => {
   expect(renderedNestedFile).toContain('@default .projenRC.ts');
   expect(renderedBaseFile).toMatchSnapshot();
   expect(renderedBaseFile).toContain("import { MyInterface } from './'");
-  expect(renderedBaseFile).toContain('readonly projenrcTsOptions: MyInterface');
+  expect(renderedBaseFile).toContain(
+    'readonly projenrcTsOptions: MyInterface;'
+  );
+});
+
+test('can update one struct within another', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const base = new ProjenStruct(project, {
+    name: 'MyBaseInterface',
+  });
+
+  const nestedStruct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  nestedStruct
+    .mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'))
+    .update('filename', { docs: { default: '.projenRC.ts' } });
+
+  base
+    .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+    .update('projenrcTsOptions', {
+      type: nestedStruct,
+      docs: {
+        summary: 'My new Summary',
+      },
+    });
+
+  // PREPARE
+  const synthSnapshotOutput = synthSnapshot(project);
+  const renderedNestedFile = synthSnapshotOutput['src/MyInterface.ts'];
+  const renderedBaseFile = synthSnapshotOutput['src/MyBaseInterface.ts'];
+
+  // ASSERT
+  expect(renderedNestedFile).toContain('@default .projenRC.ts');
+  expect(renderedBaseFile).toContain("import { MyInterface } from './'");
+  expect(renderedBaseFile).toContain(
+    'readonly projenrcTsOptions?: MyInterface'
+  );
 });
 
 class TestProject extends TypeScriptProject {
