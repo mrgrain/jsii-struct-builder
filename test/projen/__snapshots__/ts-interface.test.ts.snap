@@ -824,6 +824,12 @@ export interface TypeScriptProjectOptions {
    */
   readonly disableTsconfig?: boolean;
   /**
+   * Do not generate a \`tsconfig.dev.json\` file.
+   * @default false
+   * @stability experimental
+   */
+  readonly disableTsconfigDev?: boolean;
+  /**
    * Docgen by Typedoc.
    * @default false
    * @stability experimental
