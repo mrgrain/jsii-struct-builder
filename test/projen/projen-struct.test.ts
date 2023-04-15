@@ -354,7 +354,7 @@ test('can override import locations', () => {
   expect(renderedFile).toContain("import { typescript } from 'banana';");
 });
 
-test('can add one struct within another', () => {
+test('can use struct as type in add', () => {
   // ARRANGE
   const project = new TestProject();
 
@@ -393,7 +393,7 @@ test('can add one struct within another', () => {
   );
 });
 
-test('can update one struct within another', () => {
+test('can use struct as type in update', () => {
   // ARRANGE
   const project = new TestProject();
 
