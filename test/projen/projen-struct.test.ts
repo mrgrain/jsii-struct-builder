@@ -90,6 +90,35 @@ test('can keep only some props', () => {
   expect(renderedFile).not.toContain('filename');
 });
 
+test('can ignore deprecated props', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct.add(
+    {
+      name: 'currentProp',
+      type: { primitive: PrimitiveType.Boolean },
+    },
+    {
+      name: 'deprecatedProps',
+      type: { primitive: PrimitiveType.Boolean },
+      docs: { deprecated: 'use `currentProp`' },
+    }
+  );
+  struct.withoutDeprecated();
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('deprecatedProps');
+  expect(renderedFile).toContain('currentProp');
+});
+
 test('can overwrite props', () => {
   // ARRANGE
   const project = new TestProject();
@@ -325,7 +354,7 @@ test('can override import locations', () => {
   expect(renderedFile).toContain("import { typescript } from 'banana';");
 });
 
-test('can add one struct within another', () => {
+test('can use struct as type in add', () => {
   // ARRANGE
   const project = new TestProject();
 
@@ -364,7 +393,7 @@ test('can add one struct within another', () => {
   );
 });
 
-test('can update one struct within another', () => {
+test('can use struct as type in update', () => {
   // ARRANGE
   const project = new TestProject();
 
@@ -411,3 +440,52 @@ class TestProject extends TypeScriptProject {
     });
   }
 }
+
+test('can create a struct from empty', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  const addedStruct = Struct.empty();
+  addedStruct.add({
+    name: 'emptyProp',
+    type: { primitive: PrimitiveType.Boolean },
+  });
+  base.mixin(addedStruct);
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('emptyProp');
+});
+
+test('can use an empty struct as type with name', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const nestedStruct = Struct.empty('pkg.sub.MyOtherInterface');
+  nestedStruct.add({
+    name: 'emptyProp',
+    type: { primitive: PrimitiveType.Boolean },
+  });
+
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  base.add({
+    name: 'nestedProp',
+    type: nestedStruct,
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain("import { sub } from 'pkg';");
+  expect(renderedFile).toContain('readonly nestedProp: sub.MyOtherInterface');
+});

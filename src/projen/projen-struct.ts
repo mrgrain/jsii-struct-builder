@@ -1,12 +1,12 @@
 import { dirname, join, posix } from 'path';
-import { FQN, Property, TypeKind } from '@jsii/spec';
+import { Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
 import { TypeScriptInterfaceFile } from './ts-interface';
 import {
   Struct,
   HasProperties,
   IStructBuilder,
-  NamedTypeReference,
+  HasFullyQualifiedName,
 } from '../builder';
 
 export interface ProjenStructOptions {
@@ -56,7 +56,7 @@ export interface ProjenStructOptions {
  */
 export class ProjenStruct
   extends Component
-  implements IStructBuilder, HasProperties, NamedTypeReference
+  implements IStructBuilder, HasProperties, HasFullyQualifiedName
 {
   private builder: Struct;
 
@@ -90,12 +90,20 @@ export class ProjenStruct
     });
   }
 
+  filter(predicate: (prop: Property) => boolean): IStructBuilder {
+    this.builder.filter(predicate);
+    return this;
+  }
   only(...keep: string[]): IStructBuilder {
     this.builder.only(...keep);
     return this;
   }
   omit(...remove: string[]): IStructBuilder {
     this.builder.omit(...remove);
+    return this;
+  }
+  withoutDeprecated(): IStructBuilder {
+    this.builder.withoutDeprecated();
     return this;
   }
   add(...props: Property[]): IStructBuilder {
@@ -110,6 +118,10 @@ export class ProjenStruct
     this.builder.updateAll(update);
     return this;
   }
+  rename(from: string, to: string): IStructBuilder {
+    this.builder.rename(from, to);
+    return this;
+  }
   mixin(...sources: HasProperties[]): IStructBuilder {
     this.builder.mixin(...sources);
     return this;
@@ -117,7 +129,7 @@ export class ProjenStruct
   public get properties(): Property[] {
     return this.builder.properties;
   }
-  public get fqn(): FQN {
+  public get fqn(): string {
     return this.builder.fqn;
   }
 }

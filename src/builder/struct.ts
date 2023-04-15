@@ -1,37 +1,50 @@
-import { FQN, InterfaceType, Property, TypeKind } from '@jsii/spec';
+import { InterfaceType, Property, TypeKind } from '@jsii/spec';
 import structuredClone from '@ungap/structured-clone';
 import { findInterface } from '../private';
 
 /**
- * Something that has jsii properties
+ * Something that has jsii properties.
  */
 export interface HasProperties {
+  /**
+   * The list of properties of the thing.
+   */
   properties?: Property[];
 }
 
 /**
- * Something that has FQN
+ * Something that has a fully-qualified-name.
  */
-export interface NamedTypeReference {
+export interface HasFullyQualifiedName {
   /**
-   * The fully-qualified-name of the type (can be located in the
+   * The fully-qualified-name of the thing.
    */
-  fqn: FQN;
+  fqn: string;
 }
 
 export interface IStructBuilder {
   /**
-   * Only keep these properties
+   * Keep only the properties that meet the condition specified in the callback function.
+   */
+  filter(predicate: (prop: Property) => boolean): IStructBuilder;
+
+  /**
+   * Only keep these properties.
    */
   only(...keep: string[]): IStructBuilder;
 
   /**
-   * Omit these properties
+   * Omit these properties.
    */
   omit(...remove: string[]): IStructBuilder;
 
   /**
-   * Add properties
+   * Remove all deprecated properties.
+   */
+  withoutDeprecated(): IStructBuilder;
+
+  /**
+   * Add properties.
    *
    * In the same call, the first defined properties take priority.
    * However later calls will overwrite existing properties.
@@ -39,17 +52,24 @@ export interface IStructBuilder {
   add(...props: Property[]): IStructBuilder;
 
   /**
-   * Update all existing properties
+   * Update all existing properties.
    */
   updateAll(update: Partial<Property>): IStructBuilder;
 
   /**
-   * Update an existing property
+   * Update an existing property.
    */
   update(name: string, update: Partial<Property>): IStructBuilder;
 
   /**
-   * Mix the properties of these sources in
+   * Rename a property.
+   *
+   * If another property with the new name exists, it will be overridden.
+   */
+  rename(from: string, to: string): IStructBuilder;
+
+  /**
+   * Mix the properties of these sources into the struct.
    *
    * In the same call, the first defined sources and properties take priority.
    * However later calls will overwrite existing properties.
@@ -61,7 +81,7 @@ export interface IStructBuilder {
  * Build a jsii struct
  */
 export class Struct
-  implements IStructBuilder, HasProperties, NamedTypeReference
+  implements IStructBuilder, HasProperties, HasFullyQualifiedName
 {
   /**
    * Create a builder from an jsii spec
@@ -86,11 +106,11 @@ export class Struct
    *
    * Note that the behavior of `builder.spec` is undefined when using this method.
    */
-  public static empty() {
+  public static empty(fqn = '<<empty>>.<<empty>>') {
     return new Struct({
-      assembly: '<<empty>>',
-      fqn: '<<empty>>.<<empty>>',
-      name: '<<empty>>',
+      assembly: fqn.split('.').at(0) ?? '<<empty>>',
+      fqn,
+      name: fqn.split('.').at(-1) ?? '<<empty>>',
       kind: TypeKind.Interface,
     });
   }
@@ -105,23 +125,20 @@ export class Struct
     );
   }
 
-  /**
-   * Only keep these properties
-   */
-  public only(...keep: string[]) {
-    const current = this._properties.keys();
-    for (const key of current) {
-      if (!keep.includes(key)) {
-        this._properties.delete(key);
+  public filter(predicate: (prop: Property) => boolean) {
+    for (const propertyKey of this._properties.keys()) {
+      if (!predicate(this._properties.get(propertyKey)!)) {
+        this._properties.delete(propertyKey);
       }
     }
 
     return this;
   }
 
-  /**
-   * Omit these properties
-   */
+  public only(...keep: string[]) {
+    return this.filter((prop) => keep.includes(prop.name));
+  }
+
   public omit(...remove: string[]) {
     for (const prop of remove) {
       this._properties.delete(prop);
@@ -130,12 +147,10 @@ export class Struct
     return this;
   }
 
-  /**
-   * Add properties
-   *
-   * In the same call, the first defined properties take priority.
-   * However later calls will overwrite existing properties.
-   */
+  public withoutDeprecated() {
+    return this.filter((prop) => null == prop.docs?.deprecated);
+  }
+
   public add(...props: Property[]) {
     for (const prop of props.reverse()) {
       this._properties.set(prop.name, prop);
@@ -144,12 +159,6 @@ export class Struct
     return this;
   }
 
-  /**
-   * Update an existing property
-   *
-   * This can be used to rename a property.
-   * Simply set the the new name in the `update` struct.
-   */
   public update(name: string, update: Partial<Property>) {
     const old = this._properties.get(name);
 
@@ -173,9 +182,6 @@ export class Struct
     return this.add(updatedProp);
   }
 
-  /**
-   * Update all existing properties
-   */
   public updateAll(update: Partial<Property>) {
     for (const propertyKey of this._properties.keys()) {
       this.update(propertyKey, update);
@@ -183,12 +189,10 @@ export class Struct
     return this;
   }
 
-  /**
-   * Mix the properties of these sources in
-   *
-   * In the same call, the first defined sources and properties take priority.
-   * However later calls will overwrite existing properties.
-   */
+  public rename(from: string, to: string) {
+    return this.update(from, { name: to });
+  }
+
   public mixin(...sources: HasProperties[]) {
     for (const source of sources.reverse()) {
       this.add(...(source.properties || []));
@@ -219,7 +223,7 @@ export class Struct
   /**
    * Get the FQN for the builder
    */
-  public get fqn(): FQN {
+  public get fqn(): string {
     return this._base.fqn;
   }
 }
