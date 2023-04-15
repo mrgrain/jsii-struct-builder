@@ -20,7 +20,7 @@ npm install --save-dev @mrgrain/jsii-struct-builder
 ### Create from an existing Struct
 
 Use the jsii FQN to mix in an existing struct.
-Use `omit` to remove any properties you are not interested in.
+Use `omit()` to remove any properties you are not interested in.
 
 ```ts
 new ProjenStruct(project, { name: 'MyProjectOptions'})
@@ -53,12 +53,17 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
 
 Existing properties can be updated.
 The provided partial `@jsii/spec` definition will be deep merged with the existing spec.
-Updates can be also be used to rename properties.
+
+A convenience `rename()` method is provided.
+An `update()` of the `name` field has the same effect and can be combined with other updates.
 
 ```ts
 new ProjenStruct(project, { name: 'MyProjectOptions'})
   .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+
+  // Update a property
   .update('typescriptVersion', { optional: false })
+  // Nested values can be updated
   .update('sampleCode', {
     docs: {
         summary: 'New summary',
@@ -66,7 +71,37 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
       }
     }
   )
-  .update('eslint', { name: 'linter' });
+
+  // Rename a property
+  .rename('homepage', 'website'})
+  // ...this also does a rename
+  .update('eslint', {
+    name: 'lint',
+    optional: false,
+  });
+```
+
+### Filter properties
+
+Arbitrary predicate functions can be used to filter properties.
+Only properties that meet the condition are kept.
+
+Use `omit()` and `only()` for easy name based filtering.
+A convenience `withoutDeprecated()` method is also provided.
+
+```ts
+new ProjenStruct(project, { name: 'MyProjectOptions'})
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+
+  // Keep properties using arbitrary filters
+  .filter((prop) => !prop.optional)
+
+  // Keep or omit properties by name
+  .only('projenrcTs', 'projenrcTsOptions')
+  .omit('sampleCode')
+
+  // Remove all deprecated properties
+  .withoutDeprecated();
 ```
 
 ### Advanced usage
@@ -88,6 +123,18 @@ const foo = new ProjenStruct(project, { name: 'Foo'})
 const bar = new ProjenStruct(project, { name: 'Bar'})
 
 bar.mixin(foo);
+```
+
+You can also use `Struct` and `ProjenStruct` as type of a property:
+
+```ts
+const foo = new ProjenStruct(project, { name: 'Foo'})
+const bar = new ProjenStruct(project, { name: 'Bar'})
+
+foo.add({
+  name: 'barSettings',
+  type: bar
+});
 ```
 
 The default configuration makes assumptions about the new interface that are usually okay.
