@@ -90,6 +90,35 @@ test('can keep only some props', () => {
   expect(renderedFile).not.toContain('filename');
 });
 
+test('can ignore deprecated props', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct.add(
+    {
+      name: 'currentProp',
+      type: { primitive: PrimitiveType.Boolean },
+    },
+    {
+      name: 'deprecatedProps',
+      type: { primitive: PrimitiveType.Boolean },
+      docs: { deprecated: 'use `currentProp`' },
+    }
+  );
+  struct.withoutDeprecated();
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('deprecatedProps');
+  expect(renderedFile).toContain('currentProp');
+});
+
 test('can overwrite props', () => {
   // ARRANGE
   const project = new TestProject();
