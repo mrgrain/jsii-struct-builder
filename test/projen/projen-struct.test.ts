@@ -440,3 +440,52 @@ class TestProject extends TypeScriptProject {
     });
   }
 }
+
+test('can create a struct from empty', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  const addedStruct = Struct.empty();
+  addedStruct.add({
+    name: 'emptyProp',
+    type: { primitive: PrimitiveType.Boolean },
+  });
+  base.mixin(addedStruct);
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('emptyProp');
+});
+
+test('can use an empty struct as type with name', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const nestedStruct = Struct.empty('pkg.sub.MyOtherInterface');
+  nestedStruct.add({
+    name: 'emptyProp',
+    type: { primitive: PrimitiveType.Boolean },
+  });
+
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  base.add({
+    name: 'nestedProp',
+    type: nestedStruct,
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain("import { sub } from 'pkg';");
+  expect(renderedFile).toContain('readonly nestedProp: sub.MyOtherInterface');
+});
