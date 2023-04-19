@@ -155,6 +155,9 @@ test('can update props', () => {
       docs: {
         summary: 'New summary',
         stability: Stability.Stable,
+        custom: {
+          pjnew: '"newVal"',
+        },
       },
       optional: false,
     });
@@ -166,6 +169,7 @@ test('can update props', () => {
   expect(renderedFile).toContain('New summary');
   expect(renderedFile).toContain('@stability stable');
   expect(renderedFile).toContain('@default "projenrc"');
+  expect(renderedFile).toContain('@pjnew "newVal"');
   expect(renderedFile).toMatchSnapshot();
 });
 

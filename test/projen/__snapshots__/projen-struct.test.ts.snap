@@ -57,6 +57,7 @@ export interface MyInterface {
    * New summary
    * @default "projenrc"
    * @stability stable
+   * @pjnew "newVal"
    */
   readonly projenCodeDir: string;
   /**

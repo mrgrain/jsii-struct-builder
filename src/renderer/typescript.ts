@@ -163,6 +163,12 @@ function docsToLines(docs?: Docs): string[] {
   if (docs.stability) {
     lines.push(`@stability ${docs.stability}`);
   }
+  if (docs.custom) {
+    Object.entries(docs.custom).forEach((entry) => {
+      const [tag, value] = entry;
+      lines.push(`@${tag} ${value}`);
+    });
+  }
 
   return lines;
 }
