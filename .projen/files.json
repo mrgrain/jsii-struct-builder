@@ -12,6 +12,7 @@
     ".mergify.yml",
     ".node-version",
     ".npmignore",
+    ".npmrc",
     ".nvmrc",
     ".prettierignore",
     ".prettierrc.json",
