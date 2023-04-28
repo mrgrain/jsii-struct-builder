@@ -7,6 +7,7 @@ import {
   HasProperties,
   IStructBuilder,
   HasFullyQualifiedName,
+  HasStructSpec,
 } from '../builder';
 
 export interface ProjenStructOptions {
@@ -56,7 +57,11 @@ export interface ProjenStructOptions {
  */
 export class ProjenStruct
   extends Component
-  implements IStructBuilder, HasProperties, HasFullyQualifiedName
+  implements
+    IStructBuilder,
+    HasProperties,
+    HasFullyQualifiedName,
+    HasStructSpec
 {
   private builder: Struct;
 
@@ -90,6 +95,9 @@ export class ProjenStruct
     });
   }
 
+  public get spec() {
+    return this.builder.spec;
+  }
   filter(predicate: (prop: Property) => boolean): IStructBuilder {
     this.builder.filter(predicate);
     return this;

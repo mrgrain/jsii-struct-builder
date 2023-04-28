@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can render a struct directly 1`] = `
+"
+export interface MyFunctionProps {
+  /**
+   * A directory tree that may contain *.ts files that can be referenced from your projenrc typescript file.
+   * @default "projenrc"
+   * @stability experimental
+   */
+  readonly projenCodeDir?: string;
+  /**
+   * The name of the projenrc file.
+   * @default ".projenrc.ts"
+   * @stability experimental
+   */
+  readonly filename?: string;
+}
+"
+`;

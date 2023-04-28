@@ -23,6 +23,6 @@ export class TypeScriptInterfaceFile extends TextFile {
 
     const renderer = new TypeScriptRenderer(options);
     this.addLine(`// ${this.marker}`);
-    this.addLine(renderer.renderStruct(spec));
+    this.addLine(renderer.renderStructSpec(spec));
   }
 }

@@ -104,6 +104,20 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
   .withoutDeprecated();
 ```
 
+### Use without projen
+
+It is not required to use _projen_ with this package.
+You can use a renderer directly to create files:
+
+```ts
+const myProps = Struct.empty("@my-scope/my-pkg.MyFunctionProps")
+  .mixin(Struct.fromFqn("aws-cdk-lib.aws_lambda.FunctionProps"))
+  .withoutDeprecated();
+
+const renderer = new TypeScriptRenderer();
+fs.writeFileSync("my-props.ts", renderer.renderStruct(myProps));
+```
+
 ### Advanced usage
 
 `Struct` and `ProjenStruct` both share the same interface.

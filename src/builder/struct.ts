@@ -9,7 +9,7 @@ export interface HasProperties {
   /**
    * The list of properties of the thing.
    */
-  properties?: Property[];
+  readonly properties?: Property[];
 }
 
 /**
@@ -19,7 +19,17 @@ export interface HasFullyQualifiedName {
   /**
    * The fully-qualified-name of the thing.
    */
-  fqn: string;
+  readonly fqn: string;
+}
+
+/**
+ * Something that has a fully-qualified-name.
+ */
+export interface HasStructSpec {
+  /**
+   * Get the current spec of the builder.
+   */
+  readonly spec: InterfaceType;
 }
 
 export interface IStructBuilder {
@@ -81,7 +91,11 @@ export interface IStructBuilder {
  * Build a jsii struct
  */
 export class Struct
-  implements IStructBuilder, HasProperties, HasFullyQualifiedName
+  implements
+    IStructBuilder,
+    HasProperties,
+    HasFullyQualifiedName,
+    HasStructSpec
 {
   /**
    * Create a builder from an jsii spec
