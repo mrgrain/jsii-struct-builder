@@ -55,7 +55,6 @@ exports[`can update props 1`] = `
 export interface MyInterface {
   /**
    * New summary
-   * @default "projenrc"
    * @stability stable
    * @pjnew "newVal"
    */

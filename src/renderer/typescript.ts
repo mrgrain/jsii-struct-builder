@@ -9,6 +9,7 @@ import {
   Property,
   TypeReference,
 } from '@jsii/spec';
+import structuredClone from '@ungap/structured-clone';
 import { HasStructSpec } from '../builder';
 import { compareLowerCase, comparePath } from '../private';
 
@@ -29,7 +30,7 @@ export interface TypeScriptRendererOptions {
    * @default - uses the assembly name for external packages
    * local imports traverse up a number of levels equivalent to the number of fqn parts
    */
-  importLocations?: Record<string, string>;
+  readonly importLocations?: Record<string, string>;
 
   /**
    * Indentation size
@@ -37,6 +38,13 @@ export interface TypeScriptRendererOptions {
    * @default 2
    */
   readonly indent?: number;
+
+  /**
+   * Render `@default` doctag also for required (not optional) properties.
+   *
+   * @default false
+   */
+  readonly defaultTagsForRequiredProps?: boolean;
 }
 
 /**
@@ -44,9 +52,15 @@ export interface TypeScriptRendererOptions {
  */
 export class TypeScriptRenderer {
   private buffer: CodeBuffer;
+  private options: Required<TypeScriptRendererOptions>;
 
-  public constructor(private options: TypeScriptRendererOptions = {}) {
-    this.buffer = new CodeBuffer(' '.repeat(options.indent ?? 2));
+  public constructor(options: TypeScriptRendererOptions = {}) {
+    this.options = {
+      importLocations: options.importLocations ?? {},
+      indent: options.indent ?? 2,
+      defaultTagsForRequiredProps: options.defaultTagsForRequiredProps ?? false,
+    };
+    this.buffer = new CodeBuffer(' '.repeat(this.options.indent));
   }
 
   /**
@@ -87,9 +101,14 @@ export class TypeScriptRenderer {
   }
 
   protected renderProperty(p: Property, containingFqn: string) {
-    if (p.docs) {
-      this.renderDocBlock(docsToLines(p.docs));
+    const docs = structuredClone(p.docs);
+    if (docs) {
+      if (!p.optional && !this.options.defaultTagsForRequiredProps) {
+        delete docs.default;
+      }
+      this.renderDocBlock(docsToLines(docs));
     }
+
     this.buffer.line(
       `readonly ${p.name}${p.optional ? '?' : ''}: ${typeRefToType(
         p.type,
@@ -220,7 +239,7 @@ function typeRefToType(t: TypeReference, containingFqn: string): string {
 
 function extractImports(
   spec: InterfaceType,
-  importLocations: Record<string, string> = {}
+  importLocations: Record<string, string>
 ): Map<string, Set<string>> {
   const refs = spec.properties?.flatMap((p) => collectFQNs(p.type)) || [];
   return refs.reduce((mods, ref) => {
