@@ -151,6 +151,14 @@ export class Struct
     return this.filter((prop) => null == prop.docs?.deprecated);
   }
 
+  public allOptional() {
+    this._properties.forEach((property) => {
+      property.optional = true;
+    });
+
+    return this;
+  }
+
   public add(...props: Property[]) {
     for (const prop of props.reverse()) {
       this._properties.set(prop.name, prop);
