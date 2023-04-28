@@ -9,6 +9,7 @@ import {
   Property,
   TypeReference,
 } from '@jsii/spec';
+import { HasStructSpec } from '../builder';
 import { compareLowerCase, comparePath } from '../private';
 
 /**
@@ -48,7 +49,17 @@ export class TypeScriptRenderer {
     this.buffer = new CodeBuffer(' '.repeat(options.indent ?? 2));
   }
 
-  public renderStruct(spec: InterfaceType): string {
+  /**
+   * Render something that has a struct spec
+   */
+  public renderStruct(struct: HasStructSpec): string {
+    return this.renderStructSpec(struct.spec);
+  }
+
+  /**
+   * Render a jsii InterfaceType spec
+   */
+  public renderStructSpec(spec: InterfaceType): string {
     this.buffer.flush();
 
     this.renderImports(extractImports(spec, this.options.importLocations));
