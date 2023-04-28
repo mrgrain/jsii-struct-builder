@@ -129,6 +129,34 @@ test('can ignore deprecated props', () => {
   expect(renderedFile).toContain('currentProp');
 });
 
+test('can make all props optional', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, { name: 'MyInterface' });
+  struct.add(
+    {
+      name: 'optionalProp',
+      type: { primitive: PrimitiveType.Boolean },
+      optional: true,
+    },
+    {
+      name: 'requiredProp',
+      type: { primitive: PrimitiveType.Boolean },
+      optional: false,
+    }
+  );
+  struct.allOptional();
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('optionalProp?: boolean');
+  expect(renderedFile).toContain('requiredProp?: boolean');
+});
+
 test('can overwrite props', () => {
   // ARRANGE
   const project = new TestProject();

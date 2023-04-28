@@ -114,6 +114,10 @@ export class ProjenStruct
     this.builder.withoutDeprecated();
     return this;
   }
+  allOptional(): IStructBuilder {
+    this.builder.allOptional();
+    return this;
+  }
   add(...props: Property[]): IStructBuilder {
     this.builder.add(...props);
     return this;
