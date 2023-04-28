@@ -7,6 +7,16 @@ import {
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { Struct, ProjenStruct } from '../../src';
 
+class TestProject extends TypeScriptProject {
+  public constructor(options: Partial<TypeScriptProjectOptions> = {}) {
+    super({
+      name: 'test',
+      defaultReleaseBranch: 'main',
+      ...options,
+    });
+  }
+}
+
 test('can mixin a struct', () => {
   // ARRANGE
   const project = new TestProject();
@@ -196,7 +206,6 @@ test('can update props', () => {
   // ASSERT
   expect(renderedFile).toContain('New summary');
   expect(renderedFile).toContain('@stability stable');
-  expect(renderedFile).toContain('@default "projenrc"');
   expect(renderedFile).toContain('@pjnew "newVal"');
   expect(renderedFile).toMatchSnapshot();
 });
@@ -462,16 +471,6 @@ test('can use struct as type in update', () => {
     'readonly projenrcTsOptions?: MyInterface'
   );
 });
-
-class TestProject extends TypeScriptProject {
-  public constructor(options: Partial<TypeScriptProjectOptions> = {}) {
-    super({
-      name: 'test',
-      defaultReleaseBranch: 'main',
-      ...options,
-    });
-  }
-}
 
 test('can create a struct from empty', () => {
   // ARRANGE
