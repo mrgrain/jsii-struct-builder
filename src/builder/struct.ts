@@ -49,6 +49,11 @@ export interface IStructBuilder {
   omit(...remove: string[]): IStructBuilder;
 
   /**
+   * Mark all properties as optional.
+   */
+  allOptional(): IStructBuilder;
+
+  /**
    * Remove all deprecated properties.
    */
   withoutDeprecated(): IStructBuilder;
