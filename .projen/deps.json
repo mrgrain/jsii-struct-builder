@@ -97,6 +97,7 @@
     },
     {
       "name": "@ungap/structured-clone",
+      "version": "~1.0.0",
       "type": "runtime"
     }
   ],

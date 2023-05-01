@@ -54,7 +54,7 @@ const project = new typescript.TypeScriptProject({
   }),
 
   // Dependencies
-  deps: ['@jsii/spec', '@ungap/structured-clone'],
+  deps: ['@jsii/spec', '@ungap/structured-clone@~1.0.0'],
   devDeps: ['projen', '@types/ungap__structured-clone'],
   peerDeps: ['projen'],
   peerDependencyOptions: {
