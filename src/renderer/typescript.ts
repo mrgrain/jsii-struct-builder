@@ -93,7 +93,7 @@ export class TypeScriptRenderer {
       .forEach((mod) => {
         const imports = Array.from(modules.get(mod)?.values() || []);
         this.buffer.line(
-          `import { ${imports
+          `import type { ${imports
             .sort(compareLowerCase)
             .join(', ')} } from '${mod}';`
         );
