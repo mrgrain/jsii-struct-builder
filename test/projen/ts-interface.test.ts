@@ -94,6 +94,26 @@ test('can override package imports', () => {
   );
 });
 
+test('can use explicit type imports', () => {
+  // Arrange
+  const project = new TestProject();
+  const spec = findInterface(
+    'projen.typescript.TypeScriptProjectOptions',
+    false
+  );
+
+  // ACT
+  new TypeScriptInterfaceFile(project, 'interface.ts', spec, {
+    useTypeImports: true,
+  });
+  const renderedFile = synthSnapshot(project)['interface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain(
+    "import type { javascript, typescript } from '../';"
+  );
+});
+
 class TestProject extends Project {
   public constructor() {
     super({
