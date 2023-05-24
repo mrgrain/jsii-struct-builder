@@ -260,9 +260,7 @@ test('can import type from the same package at the top level', () => {
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain(
-    "import type { more, OtherInterface } from './';"
-  );
+  expect(renderedFile).toContain("import { more, OtherInterface } from './';");
 });
 
 test('can import type from the same package when nested', () => {
@@ -294,7 +292,7 @@ test('can import type from the same package when nested', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import type { more, OtherInterface } from '../../../';"
+    "import { more, OtherInterface } from '../../../';"
   );
 });
 
@@ -327,9 +325,7 @@ test("can import type from the same package when in a location that's not matchi
   const renderedFile = synthSnapshot(project)['src/sub/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain(
-    "import type { more, OtherInterface } from '../';"
-  );
+  expect(renderedFile).toContain("import { more, OtherInterface } from '../';");
 });
 
 test('can import type from an other package', () => {
@@ -353,7 +349,7 @@ test('can import type from an other package', () => {
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain("import type { typescript } from 'projen';");
+  expect(renderedFile).toContain("import { typescript } from 'projen';");
 });
 
 test('can override import locations', () => {
@@ -395,10 +391,8 @@ test('can override import locations', () => {
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain(
-    "import type { more, OtherInterface } from 'bar';"
-  );
-  expect(renderedFile).toContain("import type { typescript } from 'banana';");
+  expect(renderedFile).toContain("import { more, OtherInterface } from 'bar';");
+  expect(renderedFile).toContain("import { typescript } from 'banana';");
 });
 
 test('can use struct as type in add', () => {
@@ -434,7 +428,7 @@ test('can use struct as type in add', () => {
   expect(renderedNestedFile).toMatchSnapshot();
   expect(renderedNestedFile).toContain('@default .projenRC.ts');
   expect(renderedBaseFile).toMatchSnapshot();
-  expect(renderedBaseFile).toContain("import type { MyInterface } from './'");
+  expect(renderedBaseFile).toContain("import { MyInterface } from './'");
   expect(renderedBaseFile).toContain(
     'readonly projenrcTsOptions: MyInterface;'
   );
@@ -472,7 +466,7 @@ test('can use struct as type in update', () => {
 
   // ASSERT
   expect(renderedNestedFile).toContain('@default .projenRC.ts');
-  expect(renderedBaseFile).toContain("import type { MyInterface } from './'");
+  expect(renderedBaseFile).toContain("import { MyInterface } from './'");
   expect(renderedBaseFile).toContain(
     'readonly projenrcTsOptions?: MyInterface'
   );
@@ -523,6 +517,6 @@ test('can use an empty struct as type with name', () => {
   const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain("import type { sub } from 'pkg';");
+  expect(renderedFile).toContain("import { sub } from 'pkg';");
   expect(renderedFile).toContain('readonly nestedProp: sub.MyOtherInterface');
 });
