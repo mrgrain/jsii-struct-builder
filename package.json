@@ -32,7 +32,7 @@
     "organization": false
   },
   "devDependencies": {
-    "@types/jest": "^29.5.1",
+    "@types/jest": "^29.5.2",
     "@types/node": "^16",
     "@types/ungap__structured-clone": "^0.3.0",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -47,7 +47,7 @@
     "jest-junit": "^15",
     "npm-check-updates": "^16",
     "prettier": "^2.8.8",
-    "projen": "^0.71.76",
+    "projen": "^0.71.80",
     "standard-version": "^9",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
