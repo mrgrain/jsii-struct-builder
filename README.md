@@ -17,13 +17,19 @@ Install with:
 npm install --save-dev @mrgrain/jsii-struct-builder
 ```
 
+Then, place a `new ProjenStruct` in your `.projenrc.js` file, passing your
+[TypeScript project](https://projen.io/typescript.html) as the first parameter. See the sections below for more usage
+details.
+
+If you're not using [`projen`](https://projen.io/), see [Use without `projen`](#use-without-projen), below.
+
 ### Create from an existing Struct
 
 Use the jsii FQN to mix in an existing struct.
 Use `omit()` to remove any properties you are not interested in.
 
 ```ts
-new ProjenStruct(project, { name: 'MyProjectOptions'})
+new ProjenStruct(project, { name: 'MyProjectOptions' })
   .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
   .omit('sampleCode', 'projenrcTs', 'projenrcTsOptions');
 ```
@@ -35,16 +41,16 @@ Complex types can be used and will be imported using their FQN.
 Any existing properties of the same name will be replaced.
 
 ```ts
-new ProjenStruct(project, { name: 'MyProjectOptions'})
+new ProjenStruct(project, { name: 'MyProjectOptions' })
   .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
   .add(
     {
       name: 'booleanSetting',
-      type: { primitive: jsii.PrimitiveType.Boolean }
+      type: { primitive: jsii.PrimitiveType.Boolean },
     },
     {
       name: 'complexSetting',
-      type: { fqn: "my_project.SomeEnum" }
+      type: { fqn: 'my_project.SomeEnum' },
     }
   );
 ```
@@ -90,7 +96,7 @@ Use `omit()` and `only()` for easy name based filtering.
 A convenience `withoutDeprecated()` method is also provided.
 
 ```ts
-new ProjenStruct(project, { name: 'MyProjectOptions'})
+new ProjenStruct(project, { name: 'MyProjectOptions' })
   .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
 
   // Keep properties using arbitrary filters
@@ -104,18 +110,70 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
   .withoutDeprecated();
 ```
 
+### Exposing CDK Properties
+
+A common use-case for this project is to expose arbitrary overrides in CDK constructs. For example, you may want to
+provide common AWS Lambda configuration, but allow a consuming user to override any arbitrary property.
+
+To accomplish this, first create the new struct in your `.projenrc.js` file.
+
+```js
+const { ProjenStruct, Struct } = require('@mrgrain/jsii-struct-builder');
+const { awscdk } = require('projen');
+
+const project = new awscdk.AwsCdkConstructLibrary({
+  // your config - see https://projen.io/awscdk-construct.html
+});
+
+new ProjenStruct(project, { name: 'MyFunctionProps' })
+  .mixin(Struct.fromFqn('aws-cdk-lib.aws_lambda.FunctionProps'))
+  .withoutDeprecated()
+  .allOptional()
+  .omit('code'); // our construct always provides the code
+```
+
+Then, expose the new struct in your CDK construct.
+
+```ts
+// lib/MyFunction.ts
+import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Construct } from 'constructs';
+import { join } from 'path';
+import { FunctionOverrides } from './FunctionOverrides';
+
+export interface MyFunctionProps {
+  // ... other props here
+  readonly functionOverrides?: FunctionOverrides;
+}
+
+export class MyFunction extends Construct {
+  constructor(scope: Construct, id: string, props: MyFunctionProps = {}) {
+    super(scope, id);
+
+    const { functionOverrides = {} } = props;
+
+    new Function(this, 'Function', {
+      runtime: Runtime.NODEJS_18_X,
+      handler: 'index.handler',
+      code: Code.fromAsset(join(__dirname, 'lambda-handler')),
+      ...functionOverrides,
+    });
+  }
+}
+```
+
 ### Use without projen
 
 It is not required to use _projen_ with this package.
 You can use a renderer directly to create files:
 
 ```ts
-const myProps = Struct.empty("@my-scope/my-pkg.MyFunctionProps")
-  .mixin(Struct.fromFqn("aws-cdk-lib.aws_lambda.FunctionProps"))
+const myProps = Struct.empty('@my-scope/my-pkg.MyFunctionProps')
+  .mixin(Struct.fromFqn('aws-cdk-lib.aws_lambda.FunctionProps'))
   .withoutDeprecated();
 
 const renderer = new TypeScriptRenderer();
-fs.writeFileSync("my-props.ts", renderer.renderStruct(myProps));
+fs.writeFileSync('my-props.ts', renderer.renderStruct(myProps));
 ```
 
 ### Advanced usage
@@ -133,8 +191,8 @@ base.omit('sampleCode', 'projenrcTs', 'projenrcTsOptions');
 Or you can mix on `ProjenStruct` with another:
 
 ```ts
-const foo = new ProjenStruct(project, { name: 'Foo'})
-const bar = new ProjenStruct(project, { name: 'Bar'})
+const foo = new ProjenStruct(project, { name: 'Foo' });
+const bar = new ProjenStruct(project, { name: 'Bar' });
 
 bar.mixin(foo);
 ```
@@ -142,12 +200,12 @@ bar.mixin(foo);
 You can also use `Struct` and `ProjenStruct` as type of a property:
 
 ```ts
-const foo = new ProjenStruct(project, { name: 'Foo'})
-const bar = new ProjenStruct(project, { name: 'Bar'})
+const foo = new ProjenStruct(project, { name: 'Foo' });
+const bar = new ProjenStruct(project, { name: 'Bar' });
 
 foo.add({
   name: 'barSettings',
-  type: bar
+  type: bar,
 });
 ```
 
@@ -160,11 +218,10 @@ new JsiiInterface(project, {
   fqn: 'my_project.nested.location.MyProjectOptions',
   filePath: 'src/nested/my-project-options.ts',
   importLocations: {
-    'my_project': '../enums'
-  }
-})
-.add({
+    my_project: '../enums',
+  },
+}).add({
   name: 'complexSetting',
-  type: { fqn: "my_project.SomeEnum" }
+  type: { fqn: 'my_project.SomeEnum' },
 });
 ```
