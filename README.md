@@ -132,7 +132,7 @@ new ProjenStruct(project, { name: 'MyFunctionProps' })
   .omit('code'); // our construct always provides the code
 ```
 
-Then, expose the new struct in your CDK construct.
+Then use the new struct in your CDK construct.
 
 ```ts
 // lib/MyFunction.ts
