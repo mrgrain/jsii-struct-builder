@@ -21,7 +21,7 @@ Then, place a `new ProjenStruct` in your `.projenrc.js` file, passing your
 [TypeScript project](https://projen.io/typescript.html) as the first parameter. See the sections below for more usage
 details.
 
-If you're not using [`projen`](https://projen.io/), see [Use without `projen`](#use-without-projen), below.
+If you're not using [`projen`](https://projen.io/), see [Use without `projen`](#use-without-projen).
 
 ### Create from an existing Struct
 
