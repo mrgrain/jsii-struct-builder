@@ -110,12 +110,12 @@ new ProjenStruct(project, { name: 'MyProjectOptions' })
   .withoutDeprecated();
 ```
 
-### Exposing CDK Properties
+### AWS CDK properties
 
-A common use-case for this project is to expose arbitrary overrides in CDK constructs. For example, you may want to
-provide common AWS Lambda configuration, but allow a consuming user to override any arbitrary property.
+A common use-case of this project is to expose arbitrary overrides in CDK constructs.
+For example, you may want to provide common AWS Lambda configuration, but allow a consuming user to override any arbitrary property.
 
-To accomplish this, first create the new struct in your `.projenrc.js` file.
+To accomplish this, first create the new struct in your `.projenrc.ts` file.
 
 ```js
 const { ProjenStruct, Struct } = require('@mrgrain/jsii-struct-builder');
