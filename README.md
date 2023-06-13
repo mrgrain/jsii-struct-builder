@@ -117,14 +117,14 @@ For example, you may want to provide common AWS Lambda configuration, but allow 
 To accomplish this, first create the new struct in your `.projenrc.ts` file.
 
 ```js
-const { ProjenStruct, Struct } = require('@mrgrain/jsii-struct-builder');
-const { awscdk } = require('projen');
+import { ProjenStruct, Struct } from '@mrgrain/jsii-struct-builder';
+import { awscdk } from 'projen';
 
 const project = new awscdk.AwsCdkConstructLibrary({
   // your config - see https://projen.io/awscdk-construct.html
 });
 
-new ProjenStruct(project, { name: 'MyFunctionProps' })
+new ProjenStruct(project, { name: 'FunctionOverrides' })
   .mixin(Struct.fromFqn('aws-cdk-lib.aws_lambda.FunctionProps'))
   .withoutDeprecated()
   .allOptional()
