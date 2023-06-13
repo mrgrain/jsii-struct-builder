@@ -124,7 +124,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // your config - see https://projen.io/awscdk-construct.html
 });
 
-new ProjenStruct(project, { name: 'FunctionOverrides' })
+new ProjenStruct(project, { name: 'MyFunctionProps' })
   .mixin(Struct.fromFqn('aws-cdk-lib.aws_lambda.FunctionProps'))
   .withoutDeprecated()
   .allOptional()
@@ -138,24 +138,20 @@ Then use the new struct in your CDK construct.
 import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { FunctionOverrides } from './FunctionOverrides';
-
-export interface MyFunctionProps {
-  // ... other props here
-  readonly functionOverrides?: FunctionOverrides;
-}
+import { MyFunctionProps } from './MyFunctionProps';
 
 export class MyFunction extends Construct {
   constructor(scope: Construct, id: string, props: MyFunctionProps = {}) {
     super(scope, id);
 
-    const { functionOverrides = {} } = props;
-
     new Function(this, 'Function', {
+      // sensible defaults
       runtime: Runtime.NODEJS_18_X,
       handler: 'index.handler',
+      // user provided props
+      ...props,
+      // always force `code` from our construct
       code: Code.fromAsset(join(__dirname, 'lambda-handler')),
-      ...functionOverrides,
     });
   }
 }
