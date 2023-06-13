@@ -116,7 +116,7 @@ For example, you may want to provide common AWS Lambda configuration, but allow 
 
 To accomplish this, first create the new struct in your `.projenrc.ts` file.
 
-```js
+```ts
 import { ProjenStruct, Struct } from '@mrgrain/jsii-struct-builder';
 import { awscdk } from 'projen';
 
