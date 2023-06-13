@@ -17,9 +17,8 @@ Install with:
 npm install --save-dev @mrgrain/jsii-struct-builder
 ```
 
-Then, place a `new ProjenStruct` in your `.projenrc.js` file, passing your
-[TypeScript project](https://projen.io/typescript.html) as the first parameter. See the sections below for more usage
-details.
+Then add a `new ProjenStruct` in your `.projenrc.ts` file, passing a [TypeScript project](https://projen.io/typescript.html) as the first parameter.
+See the sections below for more usage details.
 
 If you're not using [`projen`](https://projen.io/), see [Use without `projen`](#use-without-projen).
 
