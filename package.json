@@ -47,7 +47,7 @@
     "jest-junit": "^15",
     "npm-check-updates": "^16",
     "prettier": "^2.8.8",
-    "projen": "^0.71.94",
+    "projen": "^0.71.96",
     "standard-version": "^9",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
@@ -57,7 +57,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.83.0",
+    "@jsii/spec": "^1.84.0",
     "@ungap/structured-clone": "~1.0.0"
   },
   "main": "lib/index.js",
