@@ -36,6 +36,28 @@ test('can mixin a struct', () => {
   expect(renderedFile).toContain('filename');
 });
 
+test('can use the result of a chain', () => {
+  // ARRANGE
+  const project = new TestProject();
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  const other = new ProjenStruct(project, {
+    name: 'MyOtherInterface',
+  }).mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
+
+  // ACT
+  base.mixin(other);
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toMatchSnapshot();
+  expect(renderedFile).toContain('projenCodeDir');
+  expect(renderedFile).toContain('filename');
+});
+
 test('can mixin another projen struct', () => {
   // ARRANGE
   const project = new TestProject();

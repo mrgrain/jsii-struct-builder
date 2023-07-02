@@ -144,7 +144,7 @@ export class Struct
     );
   }
 
-  public filter(predicate: (prop: Property) => boolean) {
+  public filter(predicate: (prop: Property) => boolean): this {
     for (const propertyKey of this._properties.keys()) {
       if (!predicate(this._properties.get(propertyKey)!)) {
         this._properties.delete(propertyKey);
@@ -154,11 +154,11 @@ export class Struct
     return this;
   }
 
-  public only(...keep: string[]) {
+  public only(...keep: string[]): this {
     return this.filter((prop) => keep.includes(prop.name));
   }
 
-  public omit(...remove: string[]) {
+  public omit(...remove: string[]): this {
     for (const prop of remove) {
       this._properties.delete(prop);
     }
@@ -166,11 +166,11 @@ export class Struct
     return this;
   }
 
-  public withoutDeprecated() {
+  public withoutDeprecated(): this {
     return this.filter((prop) => null == prop.docs?.deprecated);
   }
 
-  public allOptional() {
+  public allOptional(): this {
     this._properties.forEach((property) => {
       property.optional = true;
     });
@@ -178,7 +178,7 @@ export class Struct
     return this;
   }
 
-  public add(...props: Property[]) {
+  public add(...props: Property[]): this {
     for (const prop of props.reverse()) {
       this._properties.set(prop.name, prop);
     }
@@ -186,7 +186,7 @@ export class Struct
     return this;
   }
 
-  public update(name: string, update: Partial<Property>) {
+  public update(name: string, update: Partial<Property>): this {
     const old = this._properties.get(name);
 
     if (!old) {
@@ -209,18 +209,18 @@ export class Struct
     return this.add(updatedProp);
   }
 
-  public updateAll(update: Partial<Property>) {
+  public updateAll(update: Partial<Property>): this {
     for (const propertyKey of this._properties.keys()) {
       this.update(propertyKey, update);
     }
     return this;
   }
 
-  public rename(from: string, to: string) {
+  public rename(from: string, to: string): this {
     return this.update(from, { name: to });
   }
 
-  public mixin(...sources: HasProperties[]) {
+  public mixin(...sources: HasProperties[]): this {
     for (const source of sources.reverse()) {
       this.add(...(source.properties || []));
     }
