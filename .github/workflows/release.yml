@@ -2,8 +2,9 @@
 
 name: release
 on:
-  schedule:
-    - cron: 0 5 1 * *
+  push:
+    branches:
+      - main
   workflow_dispatch: {}
 jobs:
   release:

@@ -1,4 +1,10 @@
-import { github, javascript, release, TextFile, typescript } from 'projen';
+import {
+  github,
+  javascript,
+  ReleasableCommits,
+  TextFile,
+  typescript,
+} from 'projen';
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
 
@@ -36,6 +42,11 @@ const project = new typescript.TypeScriptProject({
       },
     },
   },
+  depsUpgradeOptions: {
+    workflowOptions: {
+      schedule: javascript.UpgradeDependenciesSchedule.WEEKLY,
+    },
+  },
   autoApproveUpgrades: true,
   autoApproveOptions: {
     allowedUsernames: [
@@ -49,9 +60,13 @@ const project = new typescript.TypeScriptProject({
   releaseToNpm: true,
   npmAccess: javascript.NpmAccess.PUBLIC,
   defaultReleaseBranch: 'main',
-  releaseTrigger: release.ReleaseTrigger.scheduled({
-    schedule: '0 5 1 * *',
-  }),
+  releasableCommits: ReleasableCommits.ofType([
+    'feat',
+    'fix',
+    'chore',
+    'revert',
+    'docs',
+  ]),
 
   // Dependencies
   deps: ['@jsii/spec', '@ungap/structured-clone@~1.0.0'],
