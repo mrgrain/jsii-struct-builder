@@ -98,43 +98,43 @@ export class ProjenStruct
   public get spec() {
     return this.builder.spec;
   }
-  filter(predicate: (prop: Property) => boolean): IStructBuilder {
+  filter(predicate: (prop: Property) => boolean): this {
     this.builder.filter(predicate);
     return this;
   }
-  only(...keep: string[]): IStructBuilder {
+  only(...keep: string[]): this {
     this.builder.only(...keep);
     return this;
   }
-  omit(...remove: string[]): IStructBuilder {
+  omit(...remove: string[]): this {
     this.builder.omit(...remove);
     return this;
   }
-  withoutDeprecated(): IStructBuilder {
+  withoutDeprecated(): this {
     this.builder.withoutDeprecated();
     return this;
   }
-  allOptional(): IStructBuilder {
+  allOptional(): this {
     this.builder.allOptional();
     return this;
   }
-  add(...props: Property[]): IStructBuilder {
+  add(...props: Property[]): this {
     this.builder.add(...props);
     return this;
   }
-  update(name: string, update: Partial<Property>): IStructBuilder {
+  update(name: string, update: Partial<Property>): this {
     this.builder.update(name, update);
     return this;
   }
-  updateAll(update: Partial<Property>): IStructBuilder {
+  updateAll(update: Partial<Property>): this {
     this.builder.updateAll(update);
     return this;
   }
-  rename(from: string, to: string): IStructBuilder {
+  rename(from: string, to: string): this {
     this.builder.rename(from, to);
     return this;
   }
-  mixin(...sources: HasProperties[]): IStructBuilder {
+  mixin(...sources: HasProperties[]): this {
     this.builder.mixin(...sources);
     return this;
   }
