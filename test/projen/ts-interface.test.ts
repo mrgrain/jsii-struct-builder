@@ -99,7 +99,7 @@ test('can use explicit type imports', () => {
   const project = new TestProject();
   const spec = findInterface(
     'projen.typescript.TypeScriptProjectOptions',
-    false
+    false,
   );
 
   // ACT
@@ -110,7 +110,7 @@ test('can use explicit type imports', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import type { javascript, typescript } from '../';"
+    "import type { javascript, typescript } from '../';",
   );
 });
 
