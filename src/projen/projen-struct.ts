@@ -1,7 +1,7 @@
 import { dirname, join, posix } from 'path';
 import { Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
-import { TypeScriptInterfaceFile } from './ts-interface';
+import { TypeScriptInterfaceFile, TypeScriptInterfaceFileOptions } from './ts-interface';
 import {
   Struct,
   HasProperties,
@@ -49,7 +49,11 @@ export interface ProjenStructOptions {
    * @default - uses the assembly name for external packages
    * local imports traverse up a number of levels equivalent to the number of fqn parts
    */
-  importLocations?: Record<string, string>;
+  readonly importLocations?: Record<string, string>;
+  /**
+   * Options for the created output `TypeScriptInterfaceFile`
+   */
+  readonly outputFileOptions?: Omit<TypeScriptInterfaceFileOptions, 'importLocations'>;
 }
 
 /**
@@ -81,6 +85,7 @@ export class ProjenStruct extends Component implements IStructBuilder, HasProper
     const outputFile =
       this.options.filePath ?? join(baseDir, fqnToPath(this.builder.spec.fqn));
     new TypeScriptInterfaceFile(this.tsProject, outputFile, this.builder.spec, {
+      ...this.options.outputFileOptions,
       importLocations: {
         [this.builder.spec.assembly]: relativeImport(outputFile, baseDir),
         ...this.options.importLocations,
