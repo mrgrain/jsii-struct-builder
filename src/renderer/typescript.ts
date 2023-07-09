@@ -107,7 +107,7 @@ export class TypeScriptRenderer {
         this.buffer.line(
           `${importStmt} { ${imports
             .sort(compareLowerCase)
-            .join(', ')} } from '${mod}';`
+            .join(', ')} } from '${mod}';`,
         );
       });
   }
@@ -124,8 +124,8 @@ export class TypeScriptRenderer {
     this.buffer.line(
       `readonly ${p.name}${p.optional ? '?' : ''}: ${typeRefToType(
         p.type,
-        containingFqn
-      )};`
+        containingFqn,
+      )};`,
     );
   }
 
@@ -229,12 +229,12 @@ function typeRefToType(t: TypeReference, containingFqn: string): string {
       case CollectionKind.Array:
         return `Array<${typeRefToType(
           t.collection.elementtype,
-          containingFqn
+          containingFqn,
         )}>`;
       case CollectionKind.Map:
         return `Record<string, ${typeRefToType(
           t.collection.elementtype,
-          containingFqn
+          containingFqn,
         )}>`;
       default:
         return 'any';
@@ -251,7 +251,7 @@ function typeRefToType(t: TypeReference, containingFqn: string): string {
 
 function extractImports(
   spec: InterfaceType,
-  importLocations: Record<string, string>
+  importLocations: Record<string, string>,
 ): Map<string, Set<string>> {
   const refs = spec.properties?.flatMap((p) => collectFQNs(p.type)) || [];
   return refs.reduce((mods, ref) => {
@@ -265,7 +265,7 @@ function extractImports(
 function fqnToImportName(
   fqn: string,
   importingFqn: string,
-  importLocations: Record<string, string>
+  importLocations: Record<string, string>,
 ): string {
   const localAssembly = importingFqn.split('.', 1)[0];
   const importAssembly = fqn.split('.', 1)[0];

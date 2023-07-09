@@ -36,6 +36,28 @@ test('can mixin a struct', () => {
   expect(renderedFile).toContain('filename');
 });
 
+test('can use the result of a chain', () => {
+  // ARRANGE
+  const project = new TestProject();
+  const base = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  const other = new ProjenStruct(project, {
+    name: 'MyOtherInterface',
+  }).mixin(Struct.fromFqn('projen.typescript.ProjenrcOptions'));
+
+  // ACT
+  base.mixin(other);
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toMatchSnapshot();
+  expect(renderedFile).toContain('projenCodeDir');
+  expect(renderedFile).toContain('filename');
+});
+
 test('can mixin another projen struct', () => {
   // ARRANGE
   const project = new TestProject();
@@ -117,7 +139,7 @@ test('can ignore deprecated props', () => {
       name: 'deprecatedProps',
       type: { primitive: PrimitiveType.Boolean },
       docs: { deprecated: 'use `currentProp`' },
-    }
+    },
   );
   struct.withoutDeprecated();
 
@@ -145,7 +167,7 @@ test('can make all props optional', () => {
       name: 'requiredProp',
       type: { primitive: PrimitiveType.Boolean },
       optional: false,
-    }
+    },
   );
   struct.allOptional();
 
@@ -253,7 +275,7 @@ test('can import type from the same package at the top level', () => {
       type: {
         fqn: 'test.more.OtherInterface',
       },
-    }
+    },
   );
 
   // PREPARE
@@ -284,7 +306,7 @@ test('can import type from the same package when nested', () => {
       type: {
         fqn: 'test.more.OtherInterface',
       },
-    }
+    },
   );
 
   // PREPARE
@@ -292,7 +314,7 @@ test('can import type from the same package when nested', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import { more, OtherInterface } from '../../../';"
+    "import { more, OtherInterface } from '../../../';",
   );
 });
 
@@ -318,7 +340,7 @@ test("can import type from the same package when in a location that's not matchi
       type: {
         fqn: 'test.more.OtherInterface',
       },
-    }
+    },
   );
 
   // PREPARE
@@ -384,7 +406,7 @@ test('can override import locations', () => {
       type: {
         fqn: 'projen.typescript.TypeScriptProjectOptions',
       },
-    }
+    },
   );
 
   // PREPARE
@@ -430,7 +452,7 @@ test('can use struct as type in add', () => {
   expect(renderedBaseFile).toMatchSnapshot();
   expect(renderedBaseFile).toContain("import { MyInterface } from './'");
   expect(renderedBaseFile).toContain(
-    'readonly projenrcTsOptions: MyInterface;'
+    'readonly projenrcTsOptions: MyInterface;',
   );
 });
 
@@ -468,7 +490,7 @@ test('can use struct as type in update', () => {
   expect(renderedNestedFile).toContain('@default .projenRC.ts');
   expect(renderedBaseFile).toContain("import { MyInterface } from './'");
   expect(renderedBaseFile).toContain(
-    'readonly projenrcTsOptions?: MyInterface'
+    'readonly projenrcTsOptions?: MyInterface',
   );
 });
 

@@ -4,6 +4,12 @@ exports[`can render a struct directly 1`] = `
 "
 export interface MyFunctionProps {
   /**
+   * Whether to use \`SWC\` for ts-node.
+   * @default false
+   * @stability experimental
+   */
+  readonly swc?: boolean;
+  /**
    * A directory tree that may contain *.ts files that can be referenced from your projenrc typescript file.
    * @default "projenrc"
    * @stability experimental

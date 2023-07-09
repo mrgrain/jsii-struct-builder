@@ -5,9 +5,7 @@ import { TypeScriptRenderer, TypeScriptRendererOptions } from '../renderer';
 /**
  * Options for `TypeScriptInterfaceFile`.
  */
-export interface TypeScriptInterfaceFileOptions
-  extends TypeScriptRendererOptions,
-    SourceCodeOptions {}
+export interface TypeScriptInterfaceFileOptions extends TypeScriptRendererOptions, SourceCodeOptions {}
 
 /**
  * A TypeScript interface rendered from a jsii interface specification
@@ -17,7 +15,7 @@ export class TypeScriptInterfaceFile extends TextFile {
     project: Project,
     filePath: string,
     spec: InterfaceType,
-    options: TypeScriptInterfaceFileOptions = {}
+    options: TypeScriptInterfaceFileOptions = {},
   ) {
     super(project, filePath, options);
 

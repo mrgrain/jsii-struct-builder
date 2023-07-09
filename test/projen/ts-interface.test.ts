@@ -35,7 +35,7 @@ test('can import from an external package', () => {
   const project = new TestProject();
   const spec = findInterface(
     'projen.typescript.TypeScriptProjectOptions',
-    false
+    false,
   );
 
   // ACT
@@ -45,7 +45,7 @@ test('can import from an external package', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import { javascript, typescript } from 'projen';"
+    "import { javascript, typescript } from 'projen';",
   );
 });
 
@@ -77,7 +77,7 @@ test('can override package imports', () => {
   const project = new TestProject();
   const spec = findInterface(
     'projen.typescript.TypeScriptProjectOptions',
-    false
+    false,
   );
 
   // ACT
@@ -90,7 +90,7 @@ test('can override package imports', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import { javascript, typescript } from 'banana';"
+    "import { javascript, typescript } from 'banana';",
   );
 });
 
