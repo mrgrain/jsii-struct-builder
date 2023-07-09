@@ -24,5 +24,15 @@ dist
 /.projenrc.js
 tsconfig.tsbuildinfo
 /.eslintrc.json
+images/logo.svg
+images/logo.png
+images/wordmark.svg
+images/wordmark.png
+images/wordmark-dark.svg
+images/wordmark-dark.png
+images/wordmark-light.svg
+images/wordmark-light.png
+images/wordmark-dynamic.svg
+images/wordmark-dynamic.png
 .nvmrc
 .node-version
