@@ -1,22 +1,22 @@
-import {
-  github,
-  javascript,
-  ReleasableCommits,
-  TextFile,
-  typescript,
-} from 'projen';
-const project = new typescript.TypeScriptProject({
-  projenrcTs: true,
-
-  // Project info
-  name: '@mrgrain/jsii-struct-builder',
+import { TypeScriptProject, logo } from 'mrpj';
+const project = new TypeScriptProject({
+  repo: 'mrgrain/jsii-struct-builder',
   description: 'Build jsii structs with ease',
   authorName: 'Momo Kornher',
-  authorEmail: 'mail@moritzkornher.de',
   authorUrl: 'https://moritzkornher.de',
-  repository: 'https://github.com/mrgrain/jsii-struct-builder',
-  homepage: 'https://github.com/mrgrain/jsii-struct-builder',
-  sampleCode: false,
+  license: 'Apache-2.0',
+
+  // Release & Automation
+  release: true,
+  automationAppName: 'projen-builder',
+
+  // Dependencies
+  deps: ['@jsii/spec', '@ungap/structured-clone@~1.0.0'],
+  devDeps: ['@types/ungap__structured-clone'],
+  peerDeps: ['projen@x.x.x'],
+  peerDependencyOptions: {
+    pinnedDevDependency: false,
+  },
 
   // Node & TypeScript config
   tsconfig: {
@@ -25,69 +25,26 @@ const project = new typescript.TypeScriptProject({
     },
   },
 
-  // Formatting
-  prettier: true,
-  prettierOptions: {
-    settings: {
-      singleQuote: true,
+  // Marketing
+  logo: logo.Logo.forProjen('images/logo.svg', {
+    tapeColor: '#e9f1f1',
+    outlineColor: '#1f3043',
+    topColor: '#d89751',
+    frontColor: '#c97d2c',
+    iconTransform: 'translate(24.5 20) scale(.3)',
+    icon: '<path shape-rendering="geometricPrecision" stroke="#1f3043" stroke-width="0.25mm" fill="#1f3043" stroke-linecap="round" fill-rule="evenodd" d="M 62.7 9.2 L 62.7 0 A 55.609 55.609 0 0 1 70.011 0.614 Q 73.713 1.193 76.704 2.3 A 21.632 21.632 0 0 1 82.65 5.55 A 16.926 16.926 0 0 1 88.774 15.706 A 26.164 26.164 0 0 1 89.3 21.1 A 25.293 25.293 0 0 1 88.947 25.401 A 21.003 21.003 0 0 1 88.3 28.1 A 22.213 22.213 0 0 0 87.355 33.293 A 26.146 26.146 0 0 0 87.3 35 A 13.846 13.846 0 0 0 87.742 38.601 A 9.772 9.772 0 0 0 90.8 43.55 A 13.339 13.339 0 0 0 93.819 45.485 Q 97.037 47.027 102 47.8 L 102 53.2 L 90.3 53.2 L 90.3 52.2 A 21.858 21.858 0 0 1 85.135 50.206 A 17.08 17.08 0 0 1 80.35 46.35 A 15.031 15.031 0 0 1 76.701 36.384 A 18.948 18.948 0 0 1 76.7 36.2 A 34.658 34.658 0 0 1 76.92 32.201 Q 77.161 30.126 77.667 28.316 A 21.538 21.538 0 0 1 77.7 28.2 Q 78.7 24.7 78.7 21.1 A 12.207 12.207 0 0 0 78.23 17.618 A 9.032 9.032 0 0 0 74.9 12.85 A 13.496 13.496 0 0 0 71.911 11.2 Q 68.845 9.943 64.246 9.369 A 53.372 53.372 0 0 0 62.7 9.2 Z M 39.3 0 L 39.3 9.2 Q 31.796 9.915 27.963 12.265 A 11.168 11.168 0 0 0 27.1 12.85 A 9.262 9.262 0 0 0 23.402 19.397 A 13.715 13.715 0 0 0 23.3 21.1 Q 23.3 24.7 24.3 28.2 Q 25.3 31.7 25.3 36.2 A 15.895 15.895 0 0 1 24.177 42.238 A 14.88 14.88 0 0 1 21.65 46.35 A 17.565 17.565 0 0 1 15.056 51.081 A 23.297 23.297 0 0 1 11.7 52.2 L 11.7 53.2 L 0 53.2 L 0 47.8 A 39.622 39.622 0 0 0 3.999 46.979 Q 8.267 45.852 10.734 43.933 A 10.816 10.816 0 0 0 11.2 43.55 A 9.96 9.96 0 0 0 14.478 37.616 A 14.713 14.713 0 0 0 14.7 35 A 24.161 24.161 0 0 0 14.238 30.201 A 20.995 20.995 0 0 0 13.7 28.1 A 22.026 22.026 0 0 1 12.798 23.416 A 26.875 26.875 0 0 1 12.7 21.1 Q 12.7 10.8 19.35 5.55 Q 26 0.3 39.3 0 Z M 11.7 53.2 L 0 53.2 L 0 58.6 Q 4.963 59.373 8.181 60.915 A 13.339 13.339 0 0 1 11.2 62.85 A 9.772 9.772 0 0 1 14.258 67.799 A 13.846 13.846 0 0 1 14.7 71.4 Q 14.7 75.1 13.7 78.25 A 20.411 20.411 0 0 0 12.982 81.371 A 26.219 26.219 0 0 0 12.7 85.3 A 25.991 25.991 0 0 0 13.169 90.369 A 16.96 16.96 0 0 0 19.35 100.75 Q 24.026 104.441 31.989 105.735 A 56.26 56.26 0 0 0 39.3 106.4 L 39.3 97.2 A 53.372 53.372 0 0 1 37.754 97.031 Q 33.155 96.457 30.089 95.2 A 13.496 13.496 0 0 1 27.1 93.55 A 9.032 9.032 0 0 1 23.77 88.782 A 12.207 12.207 0 0 1 23.3 85.3 Q 23.3 81.7 24.3 78.15 Q 25.3 74.6 25.3 70.2 A 18.948 18.948 0 0 0 25.299 70.016 A 15.031 15.031 0 0 0 21.65 60.05 A 17.08 17.08 0 0 0 16.865 56.194 A 21.858 21.858 0 0 0 11.7 54.2 L 11.7 53.2 Z M 102 53.2 L 90.3 53.2 L 90.3 54.2 A 23.297 23.297 0 0 0 86.944 55.319 A 17.565 17.565 0 0 0 80.35 60.05 A 14.88 14.88 0 0 0 77.823 64.162 A 15.895 15.895 0 0 0 76.7 70.2 Q 76.7 74.6 77.7 78.15 Q 78.7 81.7 78.7 85.3 A 13.715 13.715 0 0 1 78.598 87.003 A 9.262 9.262 0 0 1 74.9 93.55 A 11.168 11.168 0 0 1 74.037 94.135 Q 70.204 96.485 62.7 97.2 L 62.7 106.4 A 56.736 56.736 0 0 0 69.756 105.776 Q 77.9 104.5 82.65 100.75 Q 89.3 95.5 89.3 85.3 A 27.124 27.124 0 0 0 89.135 82.255 A 21.009 21.009 0 0 0 88.3 78.25 Q 87.3 75.1 87.3 71.4 A 14.713 14.713 0 0 1 87.522 68.784 A 9.96 9.96 0 0 1 90.8 62.85 A 10.816 10.816 0 0 1 91.266 62.467 Q 93.733 60.548 98.001 59.421 A 39.622 39.622 0 0 1 102 58.6 L 102 53.2 Z" />',
+  }),
+  wordmarkOptions: {
+    text: 'jsii-struct-builder',
+    textPosition: {
+      dx: 30,
+      dy: 10,
     },
-  },
-
-  // Automation
-  githubOptions: {
-    projenCredentials: github.GithubCredentials.fromApp(),
-    pullRequestLintOptions: {
-      semanticTitleOptions: {
-        types: ['feat', 'fix', 'chore', 'docs', 'ci', 'revert'],
-      },
+    size: {
+      height: 180,
+      width: 960,
     },
-  },
-  depsUpgradeOptions: {
-    workflowOptions: {
-      schedule: javascript.UpgradeDependenciesSchedule.WEEKLY,
-    },
-  },
-  autoApproveUpgrades: true,
-  autoApproveOptions: {
-    allowedUsernames: [
-      'projen-builder[bot]', // Bot account for upgrade PRs
-      'mrgrain', // Auto-approve PRs of main maintainer
-    ],
-  },
-
-  // Release
-  release: true,
-  releaseToNpm: true,
-  npmAccess: javascript.NpmAccess.PUBLIC,
-  defaultReleaseBranch: 'main',
-  releasableCommits: ReleasableCommits.ofType([
-    'feat',
-    'fix',
-    'chore',
-    'revert',
-    'docs',
-  ]),
-
-  // Dependencies
-  deps: ['@jsii/spec', '@ungap/structured-clone@~1.0.0'],
-  devDeps: ['projen', '@types/ungap__structured-clone'],
-  peerDeps: ['projen'],
-  peerDependencyOptions: {
-    pinnedDevDependency: false,
   },
 });
-project
-  .tryFindObjectFile('package.json')
-  ?.addOverride('peerDependencies', { projen: 'x.x.x' });
-
-project.npmignore?.addPatterns(
-  '.gitattributes',
-  '.prettierignore',
-  '.prettierrc.json',
-  '.projenrc.ts'
-);
-
-new TextFile(project, '.nvmrc', { lines: ['v18'] });
-new TextFile(project, '.node-version', { lines: ['v18'] });
 
 project.synth();

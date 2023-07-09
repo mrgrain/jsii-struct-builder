@@ -55,19 +55,12 @@ export interface ProjenStructOptions {
 /**
  * A component generating a jsii-compatible struct
  */
-export class ProjenStruct
-  extends Component
-  implements
-    IStructBuilder,
-    HasProperties,
-    HasFullyQualifiedName,
-    HasStructSpec
-{
+export class ProjenStruct extends Component implements IStructBuilder, HasProperties, HasFullyQualifiedName, HasStructSpec {
   private builder: Struct;
 
   public constructor(
     private tsProject: typescript.TypeScriptProject,
-    private options: ProjenStructOptions
+    private options: ProjenStructOptions,
   ) {
     super(tsProject);
 
