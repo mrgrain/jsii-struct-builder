@@ -129,6 +129,14 @@
           "method"
         ]
       }
+    ],
+    "eol-last": [
+      "error",
+      "always"
+    ],
+    "space-in-parens": [
+      "error",
+      "never"
     ]
   },
   "overrides": [

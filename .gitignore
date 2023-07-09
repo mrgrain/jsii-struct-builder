@@ -52,5 +52,10 @@ junit.xml
 /lib
 /dist/
 !/.eslintrc.json
+!/images/logo.svg
+!/images/wordmark.svg
+!/images/wordmark-dark.svg
+!/images/wordmark-light.svg
+!/images/wordmark-dynamic.svg
 !/.nvmrc
 !/.node-version
