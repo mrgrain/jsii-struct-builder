@@ -1,4 +1,4 @@
-# jsii-struct-builder
+# ![jsii-struct-builder](./images/wordmark-dynamic.svg)
 
 Build jsii structs with ease.
 
