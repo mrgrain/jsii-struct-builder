@@ -26,5 +26,3 @@ tsconfig.tsbuildinfo
 /.eslintrc.json
 .nvmrc
 .node-version
-.prettierignore
-.prettierrc.json

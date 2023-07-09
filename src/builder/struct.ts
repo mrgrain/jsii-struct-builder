@@ -95,13 +95,7 @@ export interface IStructBuilder {
 /**
  * Build a jsii struct
  */
-export class Struct
-  implements
-    IStructBuilder,
-    HasProperties,
-    HasFullyQualifiedName,
-    HasStructSpec
-{
+export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedName, HasStructSpec {
   /**
    * Create a builder from an jsii spec
    */
@@ -140,7 +134,7 @@ export class Struct
   private constructor(base: InterfaceType) {
     this._base = structuredClone(base);
     this._properties = new Map(
-      base.properties?.map((p) => [p.name, structuredClone(p)])
+      base.properties?.map((p) => [p.name, structuredClone(p)]),
     );
   }
 

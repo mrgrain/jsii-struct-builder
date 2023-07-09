@@ -41,7 +41,7 @@ function loadInterface(fqn: string) {
 
 export function findInterface(
   fqn: string,
-  mergeInherited: boolean = true
+  mergeInherited: boolean = true,
 ): InterfaceType {
   const spec = loadInterface(fqn);
 
