@@ -542,3 +542,25 @@ test('can use an empty struct as type with name', () => {
   expect(renderedFile).toContain("import { sub } from 'pkg';");
   expect(renderedFile).toContain('readonly nestedProp: sub.MyOtherInterface');
 });
+
+test('can set renderer options', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+    outputFileOptions: {
+      useTypeImports: true,
+      indent: 10,
+    },
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('import type');
+  expect(renderedFile).toContain(' '.repeat(10));
+});
