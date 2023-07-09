@@ -45,6 +45,14 @@ export interface TypeScriptRendererOptions {
    * @default false
    */
   readonly defaultTagsForRequiredProps?: boolean;
+
+  /**
+   * Use explicit `type` imports when importing referenced modules.
+   *
+   * @see https://www.typescriptlang.org/docs/handbook/modules.html#importing-types
+   * @default false
+   */
+  readonly useTypeImports?: boolean;
 }
 
 /**
@@ -59,6 +67,7 @@ export class TypeScriptRenderer {
       importLocations: options.importLocations ?? {},
       indent: options.indent ?? 2,
       defaultTagsForRequiredProps: options.defaultTagsForRequiredProps ?? false,
+      useTypeImports: options.useTypeImports ?? false,
     };
     this.buffer = new CodeBuffer(' '.repeat(this.options.indent));
   }
@@ -92,8 +101,11 @@ export class TypeScriptRenderer {
       .sort(comparePath)
       .forEach((mod) => {
         const imports = Array.from(modules.get(mod)?.values() || []);
+        const importStmt = this.options.useTypeImports
+          ? 'import type'
+          : 'import';
         this.buffer.line(
-          `import { ${imports
+          `${importStmt} { ${imports
             .sort(compareLowerCase)
             .join(', ')} } from '${mod}';`,
         );
