@@ -183,7 +183,7 @@ const base = Struct.fromFqn('projen.typescript.TypeScriptProjectOptions');
 base.omit('sampleCode', 'projenrcTs', 'projenrcTsOptions');
 ```
 
-Or you can mix on `ProjenStruct` with another:
+Or you can mix in a `ProjenStruct` with another:
 
 ```ts
 const foo = new ProjenStruct(project, { name: 'Foo' });
