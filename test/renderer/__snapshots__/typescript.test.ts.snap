@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`required properties can be forced to not render a default 1`] = `
+"
+export interface MyFunctionProps {
+  readonly requiredProp: string;
+}
+"
+`;
+
 exports[`required properties can be forced to render a default 1`] = `
 "
 export interface MyFunctionProps {
@@ -11,9 +19,12 @@ export interface MyFunctionProps {
 "
 `;
 
-exports[`required properties do not render a default 1`] = `
+exports[`required properties do render @default by default 1`] = `
 "
 export interface MyFunctionProps {
+  /**
+   * @default "foobar"
+   */
   readonly requiredProp: string;
 }
 "

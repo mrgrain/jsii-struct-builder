@@ -10,6 +10,7 @@ import { github, GitOptions, IgnoreFileOptions, javascript, LoggerOptions, Proje
 export interface TypeScriptProjectOptions {
   /**
    * This is the name of your project.
+   * @default $BASEDIR
    * @stability experimental
    * @featured true
    */
@@ -609,6 +610,7 @@ export interface TypeScriptProjectOptions {
   readonly workflowRunsOn?: Array<string>;
   /**
    * The name of the main release branch.
+   * @default "main"
    * @stability experimental
    */
   readonly defaultReleaseBranch: string;
