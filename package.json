@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@jsii/spec": "^1.84.0",
-    "@types/jest": "^29.5.2",
+    "@types/jest": "^29.5.3",
     "@types/node": "^16",
     "@types/ungap__structured-clone": "^0.3.0",
     "@typescript-eslint/eslint-plugin": "^5",
