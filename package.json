@@ -32,7 +32,7 @@
     "organization": false
   },
   "devDependencies": {
-    "@jsii/spec": "^1.84.0",
+    "@jsii/spec": "^1.85.0",
     "@types/jest": "^29.5.3",
     "@types/node": "^16",
     "@types/ungap__structured-clone": "^0.3.0",
@@ -44,7 +44,7 @@
     "eslint-plugin-import": "^2.27.5",
     "jest": "^29.6.1",
     "jest-junit": "^15",
-    "mrpj": "^0.1.0",
+    "mrpj": "^0.1.1",
     "npm-check-updates": "^16",
     "projen": "^0.71.120",
     "standard-version": "^9",
@@ -56,7 +56,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.84.0",
+    "@jsii/spec": "^1.85.0",
     "@ungap/structured-clone": "~1.0.0"
   },
   "main": "lib/index.js",

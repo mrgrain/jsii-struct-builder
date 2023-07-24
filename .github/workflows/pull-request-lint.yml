@@ -29,3 +29,4 @@ jobs:
             fix
             revert
           requireScope: false
+          githubBaseUrl: ${{ github.api_url }}
