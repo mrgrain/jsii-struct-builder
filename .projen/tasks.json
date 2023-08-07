@@ -267,7 +267,7 @@
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade"
+          "exec": "yarn upgrade @jsii/spec @types/jest @types/node @types/ungap__structured-clone @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit mrpj npm-check-updates projen standard-version ts-jest ts-node typescript projen @jsii/spec @ungap/structured-clone"
         },
         {
           "exec": "npx projen"
