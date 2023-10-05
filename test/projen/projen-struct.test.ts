@@ -254,6 +254,30 @@ test('can updateAll props', () => {
   expect(renderedFile).toMatchSnapshot();
 });
 
+test('can rename a prop', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, { name: 'MyInterface' });
+  struct.add(
+    {
+      name: 'oldProp',
+      type: { primitive: PrimitiveType.Boolean },
+      optional: true,
+    },
+  );
+  struct.rename('oldProp', 'newProp');
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('oldProp');
+  expect(renderedFile).toContain('newProp?: boolean');
+  expect(renderedFile).toMatchSnapshot();
+});
+
 test('can import type from the same package at the top level', () => {
   // ARRANGE
   const project = new TestProject();

@@ -184,7 +184,7 @@ export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedN
     const old = this._properties.get(name);
 
     if (!old) {
-      throw `Unable top update property '${name}' in '${this._base.fqn}: Property does not exists, please use \`add\`.'`;
+      throw `Unable to update property '${name}' in '${this._base.fqn}: Property does not exists, please use \`add\`.'`;
     }
 
     const updatedProp = {
@@ -199,6 +199,10 @@ export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedN
         },
       },
     };
+
+    if (updatedProp.name !== name) {
+      this.omit(name);
+    }
 
     return this.add(updatedProp);
   }
