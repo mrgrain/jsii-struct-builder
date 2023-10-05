@@ -120,7 +120,7 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
 
 ### Replacing properties
 
-Existing properties can be replaces with a new `@jsii/spec` definition.
+Existing properties can be replaced with a new `@jsii/spec` definition.
 If a different `name` is provided, the property is also renamed.
 
 A callback function can be passed to `map()` to map every property to a new `@jsii/spec` definition.
