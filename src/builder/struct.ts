@@ -34,6 +34,63 @@ export interface HasStructSpec {
 
 export interface IStructBuilder {
   /**
+   * Add properties.
+   *
+   * In the same call, the first defined properties take priority.
+   * However later calls will overwrite existing properties.
+   */
+  add(...props: Property[]): IStructBuilder;
+
+  /**
+   * Mix the properties of these sources into the struct.
+   *
+   * In the same call, the first defined sources and properties take priority.
+   * However later calls will overwrite existing properties.
+   */
+  mixin(...sources: HasProperties[]): IStructBuilder;
+
+  /**
+   * Replaces an existing property with a new spec.
+   */
+  replace(name: string, replacement: Property): IStructBuilder;
+
+  /**
+   * Calls a defined callback function on each property, and replaces the property with the returned property.
+   *
+   * @param callbackfn — A function that accepts a property spec as an argument. The map method calls the callbackfn function one time for each property.
+   */
+  map(callbackfn: (prop: Property) => Property): IStructBuilder;
+
+  /**
+   * Update an existing property.
+   */
+  update(name: string, update: Partial<Property>): IStructBuilder;
+
+  /**
+   * Calls a defined callback function on each property, and merges the property with the returned property partial.
+   *
+   * @param callbackfn — A function that accepts a property spec as an argument. The map method calls the callbackfn function one time for each property.
+   */
+  updateEvery(callbackfn: (prop: Property) => Partial<Property>): IStructBuilder;
+
+  /**
+   * Update all existing properties.
+   */
+  updateAll(update: Partial<Property>): IStructBuilder;
+
+  /**
+   * Rename a property.
+   *
+   * If another property with the new name exists, it will be overridden.
+   */
+  rename(from: string, to: string): IStructBuilder;
+
+  /**
+   * Mark all properties as optional.
+   */
+  allOptional(): IStructBuilder;
+
+  /**
    * Keep only the properties that meet the condition specified in the callback function.
    */
   filter(predicate: (prop: Property) => boolean): IStructBuilder;
@@ -49,47 +106,9 @@ export interface IStructBuilder {
   omit(...remove: string[]): IStructBuilder;
 
   /**
-   * Mark all properties as optional.
-   */
-  allOptional(): IStructBuilder;
-
-  /**
    * Remove all deprecated properties.
    */
   withoutDeprecated(): IStructBuilder;
-
-  /**
-   * Add properties.
-   *
-   * In the same call, the first defined properties take priority.
-   * However later calls will overwrite existing properties.
-   */
-  add(...props: Property[]): IStructBuilder;
-
-  /**
-   * Update all existing properties.
-   */
-  updateAll(update: Partial<Property>): IStructBuilder;
-
-  /**
-   * Update an existing property.
-   */
-  update(name: string, update: Partial<Property>): IStructBuilder;
-
-  /**
-   * Rename a property.
-   *
-   * If another property with the new name exists, it will be overridden.
-   */
-  rename(from: string, to: string): IStructBuilder;
-
-  /**
-   * Mix the properties of these sources into the struct.
-   *
-   * In the same call, the first defined sources and properties take priority.
-   * However later calls will overwrite existing properties.
-   */
-  mixin(...sources: HasProperties[]): IStructBuilder;
 }
 
 /**
@@ -138,43 +157,41 @@ export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedN
     );
   }
 
-  public filter(predicate: (prop: Property) => boolean): this {
-    for (const propertyKey of this._properties.keys()) {
-      if (!predicate(this._properties.get(propertyKey)!)) {
-        this._properties.delete(propertyKey);
-      }
-    }
-
-    return this;
-  }
-
-  public only(...keep: string[]): this {
-    return this.filter((prop) => keep.includes(prop.name));
-  }
-
-  public omit(...remove: string[]): this {
-    for (const prop of remove) {
-      this._properties.delete(prop);
-    }
-
-    return this;
-  }
-
-  public withoutDeprecated(): this {
-    return this.filter((prop) => null == prop.docs?.deprecated);
-  }
-
-  public allOptional(): this {
-    this._properties.forEach((property) => {
-      property.optional = true;
-    });
-
-    return this;
-  }
-
   public add(...props: Property[]): this {
     for (const prop of props.reverse()) {
       this._properties.set(prop.name, prop);
+    }
+
+    return this;
+  }
+
+  public mixin(...sources: HasProperties[]): this {
+    for (const source of sources.reverse()) {
+      this.add(...(source.properties || []));
+    }
+
+    return this;
+  }
+
+  public replace(name: string, replacement: Property): this {
+    const current = this._properties.get(name);
+
+    if (!current) {
+      throw `Unable to replace property '${name}' in '${this._base.fqn}: Property does not exists, please use \`add\`.'`;
+    }
+
+    if (replacement.name !== name) {
+      this.omit(name);
+    }
+
+    return this.add(replacement);
+  }
+
+  public map(callbackfn: (prop: Property) => Property): this {
+    const keys = this._properties.keys();
+    for (const propertyKey of keys) {
+      const current = structuredClone(this._properties.get(propertyKey)!);
+      this.replace(propertyKey, callbackfn(current));
     }
 
     return this;
@@ -207,6 +224,16 @@ export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedN
     return this.add(updatedProp);
   }
 
+  public updateEvery(callbackfn: (prop: Property) => Partial<Property>): this {
+    const keys = this._properties.keys();
+    for (const propertyKey of keys) {
+      const current = structuredClone(this._properties.get(propertyKey)!);
+      this.update(current.name, callbackfn(current) ?? {});
+    }
+
+    return this;
+  }
+
   public updateAll(update: Partial<Property>): this {
     for (const propertyKey of this._properties.keys()) {
       this.update(propertyKey, update);
@@ -218,12 +245,39 @@ export class Struct implements IStructBuilder, HasProperties, HasFullyQualifiedN
     return this.update(from, { name: to });
   }
 
-  public mixin(...sources: HasProperties[]): this {
-    for (const source of sources.reverse()) {
-      this.add(...(source.properties || []));
+  public allOptional(): this {
+    this.map((property) => {
+      property.optional = true;
+      return property;
+    });
+
+    return this;
+  }
+
+  public filter(predicate: (prop: Property) => boolean): this {
+    for (const propertyKey of this._properties.keys()) {
+      if (!predicate(this._properties.get(propertyKey)!)) {
+        this._properties.delete(propertyKey);
+      }
     }
 
     return this;
+  }
+
+  public only(...keep: string[]): this {
+    return this.filter((prop) => keep.includes(prop.name));
+  }
+
+  public omit(...remove: string[]): this {
+    for (const prop of remove) {
+      this._properties.delete(prop);
+    }
+
+    return this;
+  }
+
+  public withoutDeprecated(): this {
+    return this.filter((prop) => null == prop.docs?.deprecated);
   }
 
   /**

@@ -278,6 +278,127 @@ test('can rename a prop', () => {
   expect(renderedFile).toMatchSnapshot();
 });
 
+test('can updateEvery property', () => {
+  // ARRANGE
+  const project = new TestProject();
+  const spec = {
+    type: { primitive: PrimitiveType.Boolean },
+    optional: false,
+    docs: {
+      summary: 'This property is required',
+      default: 'true',
+    },
+  };
+
+  // ACT
+  const struct = new ProjenStruct(project, { name: 'MyInterface' });
+  struct.add(
+    { name: 'propOne', ...spec },
+    { name: 'propTwo', ...spec },
+    { name: 'propThree', ...spec },
+  ).updateEvery((property) => {
+    if (!property.optional) {
+      return {
+        docs: {
+          default: undefined,
+        },
+      };
+    }
+    return {};
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('@default true');
+  expect(renderedFile).toMatchSnapshot();
+});
+
+test('can replace a prop', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, { name: 'MyInterface' });
+  struct.add(
+    {
+      name: 'oldProp',
+      type: { primitive: PrimitiveType.Boolean },
+      optional: true,
+    },
+  );
+  struct.replace('oldProp', {
+    name: 'newProp',
+    type: { primitive: PrimitiveType.Number },
+    optional: false,
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('oldProp');
+  expect(renderedFile).toContain('newProp: number');
+  expect(renderedFile).toMatchSnapshot();
+});
+
+test('can map properties', () => {
+  // ARRANGE
+  const project = new TestProject();
+  const spec = {
+    type: { primitive: PrimitiveType.Boolean },
+    optional: false,
+    docs: {
+      summary: 'This property is required',
+      default: 'true',
+    },
+  };
+
+  // ACT
+  const struct = new ProjenStruct(project, { name: 'MyInterface' });
+  struct.add(
+    { name: 'propOne', ...spec },
+    { name: 'propTwo', ...spec },
+    { name: 'propThree', ...spec },
+    { name: 'propFour', ...spec },
+  ).map((property) => {
+    switch (property.name) {
+      case 'propOne':
+        return {
+          name: 'aDate',
+          type: { primitive: PrimitiveType.Date },
+        };
+      case 'propTwo':
+        return {
+          name: 'aString',
+          type: { primitive: PrimitiveType.String },
+        };
+      case 'propThree':
+        return {
+          name: 'aNumber',
+          type: { primitive: PrimitiveType.Number },
+        };
+      default:
+        return property;
+    }
+  });
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).not.toContain('propOne');
+  expect(renderedFile).toContain('aDate');
+  expect(renderedFile).not.toContain('propTwo');
+  expect(renderedFile).toContain('aString');
+  expect(renderedFile).not.toContain('propThree');
+  expect(renderedFile).toContain('aNumber');
+  expect(renderedFile).toContain('propFour');
+  expect(renderedFile).toMatchSnapshot();
+});
+
+
 test('can import type from the same package at the top level', () => {
   // ARRANGE
   const project = new TestProject();

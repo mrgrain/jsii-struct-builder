@@ -96,6 +96,42 @@ export class ProjenStruct extends Component implements IStructBuilder, HasProper
   public get spec() {
     return this.builder.spec;
   }
+  add(...props: Property[]): this {
+    this.builder.add(...props);
+    return this;
+  }
+  mixin(...sources: HasProperties[]): this {
+    this.builder.mixin(...sources);
+    return this;
+  }
+  replace(name: string, replacement: Property): IStructBuilder {
+    this.builder.replace(name, replacement);
+    return this;
+  }
+  map(callbackfn: (prop: Property) => Property): this {
+    this.builder.map(callbackfn);
+    return this;
+  }
+  update(name: string, update: Partial<Property>): this {
+    this.builder.update(name, update);
+    return this;
+  }
+  updateEvery(callbackfn: (prop: Property) => Partial<Property>): this {
+    this.builder.updateEvery(callbackfn);
+    return this;
+  }
+  updateAll(update: Partial<Property>): this {
+    this.builder.updateAll(update);
+    return this;
+  }
+  rename(from: string, to: string): this {
+    this.builder.rename(from, to);
+    return this;
+  }
+  allOptional(): this {
+    this.builder.allOptional();
+    return this;
+  }
   filter(predicate: (prop: Property) => boolean): this {
     this.builder.filter(predicate);
     return this;
@@ -110,30 +146,6 @@ export class ProjenStruct extends Component implements IStructBuilder, HasProper
   }
   withoutDeprecated(): this {
     this.builder.withoutDeprecated();
-    return this;
-  }
-  allOptional(): this {
-    this.builder.allOptional();
-    return this;
-  }
-  add(...props: Property[]): this {
-    this.builder.add(...props);
-    return this;
-  }
-  update(name: string, update: Partial<Property>): this {
-    this.builder.update(name, update);
-    return this;
-  }
-  updateAll(update: Partial<Property>): this {
-    this.builder.updateAll(update);
-    return this;
-  }
-  rename(from: string, to: string): this {
-    this.builder.rename(from, to);
-    return this;
-  }
-  mixin(...sources: HasProperties[]): this {
-    this.builder.mixin(...sources);
     return this;
   }
   public get properties(): Property[] {

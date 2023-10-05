@@ -86,6 +86,81 @@ new ProjenStruct(project, { name: 'MyProjectOptions'})
   });
 ```
 
+### Updating multiple properties
+
+A callback function can be passed to `updateEvery()` to update multiple properties at a time.
+
+Use `updateAll()` to uniformly update all properties.
+A convenience `allOptional()` method is provided to make all properties optional.
+
+```js
+new ProjenStruct(project, { name: 'MyProjectOptions'})
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+
+  // Use a callback to make conditional updates
+  .updateEvery((property) => {
+    if (!property.optional) {
+      return {
+        docs: {
+          remarks: 'This property is required.',
+        },
+      };
+    }
+    return {};
+  })
+
+  // Apply an update to all properties
+  .updateAll({
+    immutable: true,
+  })
+
+  // Mark all properties as optional
+  .allOptional();
+```
+
+### Replacing properties
+
+Existing properties can be replaces with a new `@jsii/spec` definition.
+If a different `name` is provided, the property is also renamed.
+
+A callback function can be passed to `map()` to map every property to a new `@jsii/spec` definition.
+
+```ts
+new ProjenStruct(project, { name: 'MyProjectOptions' })
+  .mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'))
+
+  // Replace a property with an entirely new definition
+  .replace('autoApproveOptions', {
+    name: 'autoApproveOptions',
+    type: { fqn: 'my_project.AutoApproveOptions' },
+    docs: {
+      summary: 'Configure the auto-approval workflow.'
+    }
+  })
+
+  // Passing a new name, will also rename the property
+  .replace('autoMergeOptions', {
+    name: 'mergeFlowOptions',
+    type: { fqn: 'my_project.MergeFlowOptions' },
+  })
+
+  // Use a callback to map every property to a new definition
+  .map((property) => {
+    if (property.protected) {
+      return {
+        ...property,
+        protected: false,
+        docs: {
+          custom: {
+            'internal': 'true',
+          }
+        }
+      }
+    }
+    return property;
+  });
+```
+
 ### Filter properties
 
 Arbitrary predicate functions can be used to filter properties.
