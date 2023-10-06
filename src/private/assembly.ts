@@ -1,4 +1,5 @@
-import path from 'path';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import {
   Assembly,
   InterfaceType,
@@ -9,15 +10,43 @@ import {
 } from '@jsii/spec';
 import structuredClone from '@ungap/structured-clone';
 
+const DOT_JSII = '.jsii';
+
 const assemblies: Record<string, Assembly> = {};
 
 function assemblyPath(asm: string): string {
-  return path.dirname(require.resolve(`${asm}/.jsii`));
+  return dirname(require.resolve(join(asm, DOT_JSII)));
+}
+
+function loadAssemblyByName(asm: string): Assembly {
+  return loadAssemblyFromPath(assemblyPath(asm), false);
+}
+
+function loadLocalAssembly(asm: string): Assembly {
+  const localAssemblyPath = join(process.cwd(), DOT_JSII);
+  if (!existsSync(localAssemblyPath)) {
+    throw `jsii assembly ${localAssemblyPath} does not exist`;
+  }
+
+  const assembly = loadAssemblyFromPath(localAssemblyPath, false);
+  if (assembly.name !== asm) {
+    throw `jsii assembly ${asm} not found in ${localAssemblyPath}, got: ${assembly.name}`;
+  }
+
+  return assembly;
 }
 
 function loadAssembly(asm: string): Assembly {
   if (!assemblies[asm]) {
-    assemblies[asm] = loadAssemblyFromPath(assemblyPath(asm), false);
+    try {
+      assemblies[asm] = loadAssemblyByName(asm);
+    } catch (error) {
+      try {
+        assemblies[asm] = loadLocalAssembly(asm);
+      } catch (errorLocal) {
+        throw new AggregateError([error, errorLocal], `jsii assembly ${asm} not found.`);
+      }
+    }
   }
 
   return assemblies[asm];
@@ -29,7 +58,7 @@ function loadInterface(fqn: string) {
   const candidate = asm.types?.[fqn];
 
   if (!candidate) {
-    throw `Type ${fqn} not found`;
+    throw `Type ${fqn} not found in jsii assembly ${asm}`;
   }
 
   if (candidate?.kind !== TypeKind.Interface) {
