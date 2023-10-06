@@ -1,4 +1,3 @@
-import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import {
   Assembly,
@@ -23,14 +22,9 @@ function loadAssemblyByName(asm: string): Assembly {
 }
 
 function loadLocalAssembly(asm: string): Assembly {
-  const localAssemblyPath = join(process.cwd(), DOT_JSII);
-  if (!existsSync(localAssemblyPath)) {
-    throw `jsii assembly ${localAssemblyPath} does not exist`;
-  }
-
-  const assembly = loadAssemblyFromPath(localAssemblyPath, false);
+  const assembly = loadAssemblyFromPath(process.cwd(), false);
   if (assembly.name !== asm) {
-    throw `jsii assembly ${asm} not found in ${localAssemblyPath}, got: ${assembly.name}`;
+    throw `jsii assembly ${asm} not found in ${join(process.cwd(), DOT_JSII)}, got: ${assembly.name}`;
   }
 
   return assembly;
@@ -44,7 +38,7 @@ function loadAssembly(asm: string): Assembly {
       try {
         assemblies[asm] = loadLocalAssembly(asm);
       } catch (errorLocal) {
-        throw new AggregateError([error, errorLocal], `jsii assembly ${asm} not found.`);
+        throw new AggregateError([error, errorLocal], `jsii assembly ${asm} not found`);
       }
     }
   }
