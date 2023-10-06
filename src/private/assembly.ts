@@ -18,13 +18,13 @@ function assemblyPath(asm: string): string {
 }
 
 function loadAssemblyByName(asm: string): Assembly {
-  return loadAssemblyFromPath(assemblyPath(asm), false);
+  return loadAssemblyFromDirectory(asm, assemblyPath(asm));
 }
 
-function loadLocalAssembly(asm: string): Assembly {
-  const assembly = loadAssemblyFromPath(process.cwd(), false);
+function loadAssemblyFromDirectory(asm: string, dir: string): Assembly {
+  const assembly = loadAssemblyFromPath(dir, false);
   if (assembly.name !== asm) {
-    throw `jsii assembly ${asm} not found in ${join(process.cwd(), DOT_JSII)}, got: ${assembly.name}`;
+    throw `jsii assembly ${asm} not found in ${join(dir, DOT_JSII)}, got: ${assembly.name}`;
   }
 
   return assembly;
@@ -36,7 +36,7 @@ function loadAssembly(asm: string): Assembly {
       assemblies[asm] = loadAssemblyByName(asm);
     } catch (error) {
       try {
-        assemblies[asm] = loadLocalAssembly(asm);
+        assemblies[asm] = loadAssemblyFromDirectory(asm, process.cwd());
       } catch (errorLocal) {
         throw new AggregateError([error, errorLocal], `jsii assembly ${asm} not found`);
       }
