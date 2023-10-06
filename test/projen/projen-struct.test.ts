@@ -1,5 +1,8 @@
+import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { PrimitiveType, Stability } from '@jsii/spec';
+import { JsiiProject } from 'projen/lib/cdk';
+import { NodePackageManager } from 'projen/lib/javascript';
 import {
   TypeScriptProject,
   TypeScriptProjectOptions,
@@ -34,6 +37,152 @@ test('can mixin a struct', () => {
   expect(renderedFile).toMatchSnapshot();
   expect(renderedFile).toContain('projenCodeDir');
   expect(renderedFile).toContain('filename');
+});
+
+test('can load structs from an assembly in the current working directory', () => {
+  // ARRANGE
+  const cwd = process.cwd();
+  const project = new JsiiProject({
+    name: '@mrgrain/local-assembly-test',
+    author: 'Test',
+    authorAddress: 'me@example.com',
+    defaultReleaseBranch: 'main',
+    repositoryUrl: 'https://example.com',
+    jsiiVersion: '5.1.x',
+    packageManager: NodePackageManager.NPM,
+  });
+
+  // Create a new interface at src/index.ts, synth the project and run jsii to build the local assembly
+  writeFileSync(join(project.outdir, '.jsii'), JSON.stringify({
+    author: {
+      email: 'me@example.com',
+      name: 'Test',
+      roles: [
+        'author',
+      ],
+    },
+    description: '@mrgrain/local-assembly-test',
+    docs: {
+      stability: 'stable',
+    },
+    homepage: 'https://example.com',
+    jsiiVersion: '5.1.12 (build 0675712)',
+    license: 'Apache-2.0',
+    metadata: {
+      jsii: {
+        pacmak: {
+          hasDefaultInterfaces: true,
+        },
+      },
+      tscRootDir: 'src',
+    },
+    name: '@mrgrain/local-assembly-test',
+    readme: {
+      markdown: '# replace this',
+    },
+    repository: {
+      type: 'git',
+      url: 'https://example.com',
+    },
+    schema: 'jsii/0.10.0',
+    targets: {
+      js: {
+        npm: '@mrgrain/local-assembly-test',
+      },
+    },
+    types: {
+      '@mrgrain/local-assembly-test.MyInterface': {
+        assembly: '@mrgrain/local-assembly-test',
+        datatype: true,
+        docs: {
+          stability: 'stable',
+          summary: 'MyInterface.',
+        },
+        fqn: '@mrgrain/local-assembly-test.MyInterface',
+        kind: 'interface',
+        locationInModule: {
+          filename: 'src/index.ts',
+          line: 6,
+        },
+        name: 'MyInterface',
+        properties: [
+          {
+            abstract: true,
+            docs: {
+              default: '".projenrc.ts"',
+              stability: 'experimental',
+              summary: 'The name of the projenrc file.',
+            },
+            immutable: true,
+            locationInModule: {
+              filename: 'src/index.ts',
+              line: 24,
+            },
+            name: 'filename',
+            optional: true,
+            type: {
+              primitive: 'string',
+            },
+          },
+          {
+            abstract: true,
+            docs: {
+              default: '"projenrc"',
+              stability: 'experimental',
+              summary: 'A directory tree that may contain *.ts files that can be referenced from your projenrc typescript file.',
+            },
+            immutable: true,
+            locationInModule: {
+              filename: 'src/index.ts',
+              line: 18,
+            },
+            name: 'projenCodeDir',
+            optional: true,
+            type: {
+              primitive: 'string',
+            },
+          },
+          {
+            abstract: true,
+            docs: {
+              default: 'false',
+              stability: 'experimental',
+              summary: 'Whether to use `SWC` for ts-node.',
+            },
+            immutable: true,
+            locationInModule: {
+              filename: 'src/index.ts',
+              line: 12,
+            },
+            name: 'swc',
+            optional: true,
+            type: {
+              primitive: 'boolean',
+            },
+          },
+        ],
+        symbolId: 'src/index:MyInterface',
+      },
+    },
+    version: '0.0.0',
+    fingerprint: 'dWWza3Loc/4ffyckw0hxDDzZ2NAxtYLy55aT+FdHwBU=',
+  }));
+
+  // ACT
+  process.chdir(project.outdir);
+  new ProjenStruct(project, { name: 'MyExtendedInterface' })
+    .mixin(Struct.fromFqn('@mrgrain/local-assembly-test.MyInterface'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyExtendedInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toMatchSnapshot();
+  expect(renderedFile).toContain('projenCodeDir');
+  expect(renderedFile).toContain('filename');
+
+  // CLEANUP
+  process.chdir(cwd);
 });
 
 test('can use the result of a chain', () => {
