@@ -45,7 +45,7 @@ test('can import from an external package', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import { javascript, typescript } from 'projen';",
+    "import type { javascript, typescript } from 'projen';",
   );
 });
 
@@ -69,7 +69,7 @@ test('can import from the same package', () => {
   const renderedFile = synthSnapshot(project)['interface.ts'];
 
   // ASSERT
-  expect(renderedFile).toContain("import { more, OtherInterface } from '../';");
+  expect(renderedFile).toContain("import type { more, OtherInterface } from '../';");
 });
 
 test('can override package imports', () => {
@@ -90,7 +90,7 @@ test('can override package imports', () => {
 
   // ASSERT
   expect(renderedFile).toContain(
-    "import { javascript, typescript } from 'banana';",
+    "import type { javascript, typescript } from 'banana';",
   );
 });
 
