@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`can use struct manipulation to render required properties without a @default doctag 1`] = `
+"
+export interface MyFunctionProps {
+  readonly requiredProp: string;
+}
+"
+`;
+
 exports[`required properties do render @default by default 1`] = `
 "
 export interface MyFunctionProps {
