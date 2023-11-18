@@ -1,5 +1,4 @@
 import { InterfaceType, Property, TypeKind } from '@jsii/spec';
-import structuredClone from '@ungap/structured-clone';
 import { findInterface } from '../private';
 
 /**

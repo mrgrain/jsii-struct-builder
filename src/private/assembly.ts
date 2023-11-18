@@ -7,7 +7,6 @@ import {
   Property,
   TypeKind,
 } from '@jsii/spec';
-import structuredClone from '@ungap/structured-clone';
 
 const DOT_JSII = '.jsii';
 

@@ -14,10 +14,6 @@
       "type": "build"
     },
     {
-      "name": "@types/ungap__structured-clone",
-      "type": "build"
-    },
-    {
       "name": "@typescript-eslint/eslint-plugin",
       "version": "^6",
       "type": "build"
@@ -91,11 +87,6 @@
     },
     {
       "name": "@jsii/spec",
-      "type": "runtime"
-    },
-    {
-      "name": "@ungap/structured-clone",
-      "version": "~1.0.0",
       "type": "runtime"
     }
   ],
