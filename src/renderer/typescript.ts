@@ -40,16 +40,6 @@ export interface TypeScriptRendererOptions {
   readonly indent?: number;
 
   /**
-   * Render `@default` doctag also for required (not optional) properties.
-   *
-   * The tag is needed for `projen new` to fill in required properties at project creation time.
-   *
-   * @default true
-   * @deprecated This should not be a concern for the renderer, instead remove the doctag from required properties before rendering.
-   */
-  readonly defaultTagsForRequiredProps?: boolean;
-
-  /**
    * Use explicit `type` imports when importing referenced modules.
    *
    * @see https://www.typescriptlang.org/docs/handbook/modules.html#importing-types
@@ -69,7 +59,6 @@ export class TypeScriptRenderer {
     this.options = {
       importLocations: options.importLocations ?? {},
       indent: options.indent ?? 2,
-      defaultTagsForRequiredProps: options.defaultTagsForRequiredProps ?? true,
       useTypeImports: options.useTypeImports ?? false,
     };
     this.buffer = new CodeBuffer(' '.repeat(this.options.indent));
@@ -118,9 +107,6 @@ export class TypeScriptRenderer {
   protected renderProperty(p: Property, containingFqn: string) {
     const docs = structuredClone(p.docs);
     if (docs) {
-      if (!p.optional && !this.options.defaultTagsForRequiredProps) {
-        delete docs.default;
-      }
       this.renderDocBlock(docsToLines(docs));
     }
 
