@@ -12,7 +12,6 @@
     ".mergify.yml",
     ".node-version",
     ".npmignore",
-    ".npmrc",
     ".nvmrc",
     ".projen/deps.json",
     ".projen/files.json",
