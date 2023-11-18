@@ -11,8 +11,7 @@ const project = new TypeScriptProject({
   automationAppName: 'projen-builder',
 
   // Dependencies
-  deps: ['@jsii/spec', '@ungap/structured-clone@~1.0.0'],
-  devDeps: ['@types/ungap__structured-clone'],
+  deps: ['@jsii/spec'],
   peerDeps: ['projen@x.x.x'],
   peerDependencyOptions: {
     pinnedDevDependency: false,
@@ -46,5 +45,7 @@ const project = new TypeScriptProject({
     },
   },
 });
+
+project.package.addEngine('node', '>=18');
 
 project.synth();

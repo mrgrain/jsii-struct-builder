@@ -35,7 +35,6 @@
     "@jsii/spec": "^1.91.0",
     "@types/jest": "^29.5.8",
     "@types/node": "^18",
-    "@types/ungap__structured-clone": "^0.3.2",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
     "constructs": "^10.0.0",
@@ -56,8 +55,10 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.91.0",
-    "@ungap/structured-clone": "~1.0.0"
+    "@jsii/spec": "^1.91.0"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",

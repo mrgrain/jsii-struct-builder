@@ -249,13 +249,13 @@
           "exec": "yarn upgrade npm-check-updates"
         },
         {
-          "exec": "npm-check-updates --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@jsii/spec,@types/jest,@types/node,@types/ungap__structured-clone,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-import-resolver-typescript,eslint-plugin-import,eslint,jest,jest-junit,mrpj,npm-check-updates,projen,standard-version,ts-jest,ts-node,typescript"
+          "exec": "npm-check-updates --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@jsii/spec,@types/jest,@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-import-resolver-typescript,eslint-plugin-import,eslint,jest,jest-junit,mrpj,npm-check-updates,projen,standard-version,ts-jest,ts-node,typescript"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @jsii/spec @types/jest @types/node @types/ungap__structured-clone @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit mrpj npm-check-updates projen standard-version ts-jest ts-node typescript"
+          "exec": "yarn upgrade @jsii/spec @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit mrpj npm-check-updates projen standard-version ts-jest ts-node typescript"
         },
         {
           "exec": "npx projen"

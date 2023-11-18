@@ -22,6 +22,13 @@ See the sections below for more usage details.
 
 If you're not using [`projen`](https://projen.io/), see [Use without `projen`](#use-without-projen).
 
+### Requirements
+
+```txt
+Node.js >= 18
+projen >= 0.65.0
+```
+
 ### Create from an existing Struct
 
 Use the jsii FQN to mix in an existing struct.

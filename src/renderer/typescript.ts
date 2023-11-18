@@ -9,7 +9,6 @@ import {
   Property,
   TypeReference,
 } from '@jsii/spec';
-import structuredClone from '@ungap/structured-clone';
 import { HasStructSpec } from '../builder';
 import { compareLowerCase, comparePath } from '../private';
 
