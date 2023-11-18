@@ -43,7 +43,7 @@ export interface TypeScriptRendererOptions {
    * Use explicit `type` imports when importing referenced modules.
    *
    * @see https://www.typescriptlang.org/docs/handbook/modules.html#importing-types
-   * @default false
+   * @default true
    */
   readonly useTypeImports?: boolean;
 }
@@ -59,7 +59,7 @@ export class TypeScriptRenderer {
     this.options = {
       importLocations: options.importLocations ?? {},
       indent: options.indent ?? 2,
-      useTypeImports: options.useTypeImports ?? false,
+      useTypeImports: options.useTypeImports ?? true,
     };
     this.buffer = new CodeBuffer(' '.repeat(this.options.indent));
   }
