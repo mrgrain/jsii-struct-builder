@@ -36,3 +36,5 @@ images/wordmark-dynamic.svg
 images/wordmark-dynamic.png
 .nvmrc
 .node-version
+/.gitattributes
+/.projenrc.ts

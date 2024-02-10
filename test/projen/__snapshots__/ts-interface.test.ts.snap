@@ -586,7 +586,7 @@ export interface TypeScriptProjectOptions {
   readonly releaseTrigger?: release.ReleaseTrigger;
   /**
    * The name of the default release workflow.
-   * @default "Release"
+   * @default "release"
    * @stability experimental
    */
   readonly releaseWorkflowName?: string;
@@ -659,6 +659,13 @@ export interface TypeScriptProjectOptions {
    * @stability experimental
    */
   readonly bundlerOptions?: javascript.BundlerOptions;
+  /**
+   * Configure which licenses should be deemed acceptable for use by dependencies.
+   * This setting will cause the build to fail, if any prohibited or not allowed licenses ares encountered.
+   * @default - no license checks are run during the build and all licenses will be accepted
+   * @stability experimental
+   */
+  readonly checkLicenses?: javascript.LicenseCheckerOptions;
   /**
    * Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with \`@codeCovTokenSecret\`.
    * @default false
@@ -951,6 +958,11 @@ export interface TypeScriptProjectOptions {
    * @stability experimental
    */
   readonly tsconfigDevFile?: string;
+  /**
+   * Options for ts-jest.
+   * @stability experimental
+   */
+  readonly tsJestOptions?: typescript.TsJestOptions;
   /**
    * TypeScript version to use.
    * NOTE: Typescript is not semantically versioned and should remain on the

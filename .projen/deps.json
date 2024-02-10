@@ -1,10 +1,6 @@
 {
   "dependencies": [
     {
-      "name": "@jsii/spec",
-      "type": "build"
-    },
-    {
       "name": "@types/jest",
       "type": "build"
     },
