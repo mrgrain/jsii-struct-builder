@@ -660,9 +660,15 @@ export interface TypeScriptProjectOptions {
    */
   readonly buildWorkflow?: boolean;
   /**
+   * Options for PR build workflow.
+   * @stability experimental
+   */
+  readonly buildWorkflowOptions?: javascript.BuildWorkflowOptions;
+  /**
    * Build workflow triggers.
    * @default "{ pullRequest: {}, workflowDispatch: {} }"
-   * @stability experimental
+   * @deprecated - Use \`buildWorkflowOptions.workflowTriggers\`
+   * @stability deprecated
    */
   readonly buildWorkflowTriggers?: github.workflows.Triggers;
   /**
@@ -752,7 +758,8 @@ export interface TypeScriptProjectOptions {
    *
    * Implies that PR builds do not have anti-tamper checks.
    * @default true
-   * @stability experimental
+   * @deprecated - Use \`buildWorkflowOptions.mutableBuild\`
+   * @stability deprecated
    */
   readonly mutableBuild?: boolean;
   /**
