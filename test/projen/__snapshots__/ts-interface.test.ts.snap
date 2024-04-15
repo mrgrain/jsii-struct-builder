@@ -799,7 +799,7 @@ export interface TypeScriptProjectOptions {
   readonly prettierOptions?: javascript.PrettierOptions;
   /**
    * Indicates of "projen" should be installed as a devDependency.
-   * @default true
+   * @default - true if not a subproject
    * @stability experimental
    */
   readonly projenDevDependency?: boolean;
