@@ -38,3 +38,4 @@ images/wordmark-dynamic.png
 .node-version
 /.gitattributes
 /.projenrc.ts
+/projenrc
