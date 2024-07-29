@@ -42,12 +42,12 @@
     "eslint-plugin-import": "^2.29.1",
     "jest": "^29.7.0",
     "jest-junit": "^15",
-    "mrpj": "^0.1.57",
-    "projen": "^0.84.6",
+    "mrpj": "^0.1.58",
+    "projen": "^0.84.10",
     "standard-version": "^9",
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "peerDependencies": {
     "projen": "x.x.x"
