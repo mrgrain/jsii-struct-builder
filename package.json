@@ -42,10 +42,10 @@
     "eslint-plugin-import": "^2.29.1",
     "jest": "^29.7.0",
     "jest-junit": "^15",
-    "mrpj": "^0.1.61",
-    "projen": "^0.85.0",
+    "mrpj": "^0.1.62",
+    "projen": "^0.86.0",
     "standard-version": "^9",
-    "ts-jest": "^29.2.4",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
