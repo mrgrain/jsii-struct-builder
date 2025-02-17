@@ -268,6 +268,12 @@ export interface TypeScriptProjectOptions {
    */
   readonly bundledDeps?: Array<string>;
   /**
+   * The version of Bun to use if using Bun as a package manager.
+   * @default "latest"
+   * @stability experimental
+   */
+  readonly bunVersion?: string;
+  /**
    * Options for npm packages using AWS CodeArtifact.
    * This is required if publishing packages to, or installing scoped packages from AWS CodeArtifact
    * @default - undefined
@@ -344,14 +350,28 @@ export interface TypeScriptProjectOptions {
    */
   readonly licensed?: boolean;
   /**
-   * Minimum node.js version to require via \`engines\` (inclusive).
-   * @default - no max
+   * The maximum node version supported by this package. Most projects should not use this option.
+   * The value indicates that the package is incompatible with any newer versions of node.
+   * This requirement is enforced via the engines field.
+   *
+   * You will normally not need to set this option.
+   * Consider this option only if your package is known to not function with newer versions of node.
+   * @default - no maximum version is enforced
    * @stability experimental
    */
   readonly maxNodeVersion?: string;
   /**
-   * Minimum Node.js version to require via package.json \`engines\` (inclusive).
-   * @default - no "engines" specified
+   * The minimum node version required by this package to function. Most projects should not use this option.
+   * The value indicates that the package is incompatible with any older versions of node.
+   * This requirement is enforced via the engines field.
+   *
+   * You will normally not need to set this option, even if your package is incompatible with EOL versions of node.
+   * Consider this option only if your package depends on a specific feature, that is not available in other LTS versions.
+   * Setting this option has very high impact on the consumers of your package,
+   * as package managers will actively prevent usage with node versions you have marked as incompatible.
+   *
+   * To change the node version of your CI/CD workflows, use \`workflowNodeVersion\`.
+   * @default - no minimum version is enforced
    * @stability experimental
    */
   readonly minNodeVersion?: string;
@@ -433,7 +453,7 @@ export interface TypeScriptProjectOptions {
   readonly peerDeps?: Array<string>;
   /**
    * The version of PNPM to use if using PNPM as a package manager.
-   * @default "7"
+   * @default "9"
    * @stability experimental
    */
   readonly pnpmVersion?: string;
@@ -476,6 +496,13 @@ export interface TypeScriptProjectOptions {
    */
   readonly yarnBerryOptions?: javascript.YarnBerryOptions;
   /**
+   * The \`commit-and-tag-version\` compatible package used to bump the package version, as a dependency string.
+   * This can be any compatible package version, including the deprecated \`standard-version@9\`.
+   * @default - A recent version of "commit-and-tag-version"
+   * @stability experimental
+   */
+  readonly bumpPackage?: string;
+  /**
    * Version requirement of \`publib\` which is used to publish modules to npm.
    * @default "latest"
    * @stability experimental
@@ -499,6 +526,29 @@ export interface TypeScriptProjectOptions {
    * @stability experimental
    */
   readonly minMajorVersion?: number;
+  /**
+   * A shell command to control the next version to release.
+   * If present, this shell command will be run before the bump is executed, and
+   * it determines what version to release. It will be executed in the following
+   * environment:
+   *
+   * - Working directory: the project directory.
+   * - \`$VERSION\`: the current version. Looks like \`1.2.3\`.
+   * - \`$LATEST_TAG\`: the most recent tag. Looks like \`prefix-v1.2.3\`, or may be unset.
+   *
+   * The command should print one of the following to \`stdout\`:
+   *
+   * - Nothing: the next version number will be determined based on commit history.
+   * - \`x.y.z\`: the next version number will be \`x.y.z\`.
+   * - \`major|minor|patch\`: the next version number will be the current version number
+   *   with the indicated component bumped.
+   *
+   * This setting cannot be specified together with \`minMajorVersion\`; the invoked
+   * script can be used to achieve the effects of \`minMajorVersion\`.
+   * @default - The next version will be determined based on the commit history and project settings.
+   * @stability experimental
+   */
+  readonly nextVersionCommand?: string;
   /**
    * The npmDistTag to use when publishing from the default branch.
    * To set the npm dist-tag for release branches, set the \`npmDistTag\` property
@@ -865,8 +915,9 @@ export interface TypeScriptProjectOptions {
    */
   readonly workflowGitIdentity?: github.GitIdentity;
   /**
-   * The node version to use in GitHub workflows.
-   * @default - same as \`minNodeVersion\`
+   * The node version used in GitHub Actions workflows.
+   * Always use this option if your GitHub Actions workflows require a specific to run.
+   * @default - \`minNodeVersion\` if set, otherwise \`lts/*\`.
    * @stability experimental
    */
   readonly workflowNodeVersion?: string;
