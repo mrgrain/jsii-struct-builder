@@ -44,8 +44,8 @@
     "eslint-plugin-import": "^2.31.0",
     "jest": "^29.7.0",
     "jest-junit": "^16",
-    "mrpj": "^0.1.85",
-    "projen": "^0.91.16",
+    "mrpj": "^0.1.86",
+    "projen": "^0.91.18",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
@@ -54,7 +54,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.109.0"
+    "@jsii/spec": "^1.110.0"
   },
   "engines": {
     "node": ">=18"
