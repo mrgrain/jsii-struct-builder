@@ -17,6 +17,8 @@ Install with:
 npm install --save-dev @mrgrain/jsii-struct-builder
 ```
 
+Or add `@mrgrain/jsii-struct-builder` to the `devDeps` in your project in your `.projenrc.ts` file, and run `npx projen` to install it.
+
 Then add a `new ProjenStruct` in your `.projenrc.ts` file, passing a [TypeScript project](https://projen.io/typescript.html) as the first parameter.
 See the sections below for more usage details.
 
@@ -56,7 +58,7 @@ new ProjenStruct(project, { name: 'MyProjectOptions' })
     },
     {
       name: 'complexSetting',
-      type: { fqn: 'my_project.SomeEnum' },
+      type: { fqn: 'my_project.SomeEnum' }, // my_project is the "name" in your projen project
     }
   );
 ```
@@ -139,7 +141,7 @@ new ProjenStruct(project, { name: 'MyProjectOptions' })
   // Replace a property with an entirely new definition
   .replace('autoApproveOptions', {
     name: 'autoApproveOptions',
-    type: { fqn: 'my_project.AutoApproveOptions' },
+    type: { fqn: 'my_project.AutoApproveOptions' }, // my_project is the "name" in your projen project
     docs: {
       summary: 'Configure the auto-approval workflow.'
     }
@@ -148,7 +150,7 @@ new ProjenStruct(project, { name: 'MyProjectOptions' })
   // Passing a new name, will also rename the property
   .replace('autoMergeOptions', {
     name: 'mergeFlowOptions',
-    type: { fqn: 'my_project.MergeFlowOptions' },
+    type: { fqn: 'my_project.MergeFlowOptions' }, // my_project is the "name" in your projen project
   })
 
   // Use a callback to map every property to a new definition
@@ -239,6 +241,78 @@ export class MyFunction extends Construct {
 }
 ```
 
+### Complex types
+
+More complex jsii types can be used as well. They can be expressed like this:
+
+```ts
+import { PrimitiveType, CollectionKind } from '@jsii/spec';
+import { ProjenStruct, Struct } from '@mrgrain/jsii-struct-builder';
+import { awscdk } from 'projen';
+
+const project = new awscdk.AwsCdkConstructLibrary({
+  // your config - see https://projen.io/awscdk-construct.html
+});
+
+new ProjenStruct(project, {
+  name: 'CustomFargateServiceProps',
+  description: 'FargateServiceProps with some stuff removed and some added',
+})
+  .mixin(Struct.fromFqn('aws-cdk-lib.aws_ecs.FargateServiceProps'))
+  .omit('taskDefinition', 'desiredCount')
+  .add({
+    name: 'logMappings',
+    type: {
+      collection: {
+        elementtype: { fqn: 'my_project.LogMapping' }, // my_project is the "name" in your projen project
+        kind: CollectionKind.Array,
+      },
+    },
+    docs: {
+      summary: 'An array of a locally-defined type. The fqn comes from the jsii module name.',
+      remarks: 'This can be looked in the .jsii file like this: `jq -r \'.types[] | select (.name == "LogMapping") | .fqn\' .jsii`',
+    },
+  })
+.add({
+    name: 'agentCpu',
+    type: { primitive: PrimitiveType.Number },
+    optional: true, // an optional property
+    docs: {
+      summary: 'The amount of CPU units to allocate to the agent.', // here is how you format a long description
+      remarks: '1024 CPU units = 1 vCPU.\n\
+This is passed to the Fargate task definition.\n\
+You might need to increase this if you have a lot of logs to process.\n\
+Only some combinations of memory and CPU are valid.',
+      see: 'https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.TaskDefinition.html#memorymib',
+      default: '512',
+    },
+  })
+.add({
+    name: 'mapToArray',
+    type: {
+      collection: {
+        elementtype: {
+          collection: {
+            elementtype: { fqn: 'aws-cdk-lib.aws_logs.LogGroup' },
+            kind: CollectionKind.Array,
+          }
+        },
+        kind: CollectionKind.Map,
+      },
+    },
+    docs: {
+      summary: 'A map of string to an array of LogGroup objects.'
+    },
+  })
+.add({
+    name: 'mysteryObject',
+    type: { primitive: PrimitiveType.Any },
+    docs: {
+      summary: 'An "any" type object.'
+    },
+})
+```
+
 ### Use without projen
 
 It is not required to use _projen_ with this package.
@@ -292,13 +366,13 @@ For more complex scenarios `fqn`, `filePath` and `importLocations` can be used t
 ```ts
 new JsiiInterface(project, {
   name: 'MyProjectOptions',
-  fqn: 'my_project.nested.location.MyProjectOptions',
+  fqn: 'my_project.nested.location.MyProjectOptions', // my_project is the "name" in your projen project
   filePath: 'src/nested/my-project-options.ts',
   importLocations: {
     my_project: '../enums',
   },
 }).add({
   name: 'complexSetting',
-  type: { fqn: 'my_project.SomeEnum' },
+  type: { fqn: 'my_project.SomeEnum' }, // my_project is the "name" in your projen project
 });
 ```
