@@ -1,5 +1,5 @@
 import { dirname, join, posix } from 'path';
-import { Property, TypeKind } from '@jsii/spec';
+import { Docs, Property, TypeKind } from '@jsii/spec';
 import { Component, typescript } from 'projen';
 import { TypeScriptInterfaceFile, TypeScriptInterfaceFileOptions } from './ts-interface';
 import {
@@ -17,9 +17,23 @@ export interface ProjenStructOptions {
   readonly name: string;
   /**
    * Doc string for the struct
+   *
+   * Just does the summary
+   * If you want to add a full description, use `docs` instead.
+   * This will not be used if `docs` is provided.
+   *
    * @default - struct name
    */
   readonly description?: string;
+  /**
+   * Docs for the struct
+   *
+   * Use this to add a full description.
+   * If you only want to add a summary, use `description` instead.
+   *
+   * @default - none, use `description` if provided
+   */
+  readonly docs?: Docs;
   /**
    * The fqn of the struct
    *
@@ -74,7 +88,7 @@ export class ProjenStruct extends Component implements IStructBuilder, HasProper
       assembly: fqn.split('.').at(0) ?? tsProject.name,
       fqn,
       name: options.name,
-      docs: {
+      docs: options.docs ?? {
         summary: options.description ?? options.name,
       },
     });
