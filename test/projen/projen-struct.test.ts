@@ -858,3 +858,91 @@ test('can set renderer options', () => {
   expect(renderedFile).toContain('import type');
   expect(renderedFile).toContain(' '.repeat(10));
 });
+
+test('can set tsdoc with just docs', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+    docs: {
+      summary: 'This is a summary',
+      remarks: 'This is a full description',
+      stability: Stability.Stable,
+      custom: {
+        internal: 'true',
+      },
+    },
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('This is a summary');
+  expect(renderedFile).toContain('This is a full description');
+  expect(renderedFile).toContain('@stability stable');
+  expect(renderedFile).toContain('@internal true');
+});
+
+test('can set tsdoc with just description', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+    description: 'This is a summary',
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('This is a summary');
+});
+
+test('description is not used if docs are provided', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+    description: 'This is a description that should not be used',
+    docs: {
+      summary: 'This is a summary that should be used',
+      remarks: 'This is a full description',
+    },
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  expect(renderedFile).toContain('This is a summary that should be used');
+  expect(renderedFile).not.toContain('This is a description that should not be used');
+  expect(renderedFile).toContain('This is a full description');
+});
+
+test('name is used as description if no docs or description are provided', () => {
+  // ARRANGE
+  const project = new TestProject();
+
+  // ACT
+  const struct = new ProjenStruct(project, {
+    name: 'MyInterface',
+  });
+  struct.mixin(Struct.fromFqn('projen.typescript.TypeScriptProjectOptions'));
+
+  // PREPARE
+  const renderedFile = synthSnapshot(project)['src/MyInterface.ts'];
+
+  // ASSERT
+  // we don't want a false positive from the actual struct definition, so check for the comment format
+  expect(renderedFile).toContain(' * MyInterface');
+});

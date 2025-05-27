@@ -256,7 +256,16 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
 new ProjenStruct(project, {
   name: 'CustomFargateServiceProps',
-  description: 'FargateServiceProps with some stuff removed and some added',
+  docs: {
+    summary: 'ecs.FargateServiceProps without taskDefinition and desiredCount',
+    remarks: `We do not want to allow the user to specify a task definition or desired count,
+as this construct is meant to deploy a single service with a single task definition and
+desired count of 1. So we narrow the ecs.FargateServiceProps type to exclude these properties.
+Then we add some custom properties that are specific to our use case.`,
+    custom: {
+      'internal': 'true', // use this if you want to hide the struct from the public API
+    },
+  },
 })
   .mixin(Struct.fromFqn('aws-cdk-lib.aws_ecs.FargateServiceProps'))
   .omit('taskDefinition', 'desiredCount')
@@ -279,10 +288,10 @@ new ProjenStruct(project, {
     optional: true, // an optional property
     docs: {
       summary: 'The amount of CPU units to allocate to the agent.', // here is how you format a long description
-      remarks: '1024 CPU units = 1 vCPU.\n\
-This is passed to the Fargate task definition.\n\
-You might need to increase this if you have a lot of logs to process.\n\
-Only some combinations of memory and CPU are valid.',
+      remarks: `1024 CPU units = 1 vCPU.
+This is passed to the Fargate task definition.
+You might need to increase this if you have a lot of logs to process.
+Only some combinations of memory and CPU are valid.`,
       see: 'https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.TaskDefinition.html#memorymib',
       default: '512',
     },
