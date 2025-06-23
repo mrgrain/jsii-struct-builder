@@ -705,6 +705,18 @@ export interface TypeScriptProjectOptions {
    */
   readonly autoApproveUpgrades?: boolean;
   /**
+   * Setup Biome.
+   * @default false
+   * @stability experimental
+   */
+  readonly biome?: boolean;
+  /**
+   * Biome options.
+   * @default - default options
+   * @stability experimental
+   */
+  readonly biomeOptions?: javascript.BiomeOptions;
+  /**
    * Define a GitHub workflow for building PRs.
    * @default - true if not a subproject
    * @stability experimental
