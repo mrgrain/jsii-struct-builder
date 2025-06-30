@@ -34,7 +34,7 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2",
     "@types/jest": "^29.5.14",
-    "@types/node": "^18",
+    "@types/node": "ts5.8",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "commit-and-tag-version": "^12",
@@ -44,11 +44,11 @@
     "eslint-plugin-import": "^2.32.0",
     "jest": "^29.7.0",
     "jest-junit": "^16",
-    "mrpj": "^0.1.99",
-    "projen": "^0.93.0",
+    "mrpj": "^0.2.4",
+    "projen": "^0.94.0",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.x"
   },
   "peerDependencies": {
     "projen": "x.x.x"
