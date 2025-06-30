@@ -1,10 +1,12 @@
 import { dirname, join } from 'node:path';
-import {
+import type {
   Assembly,
   InterfaceType,
-  loadAssemblyFromPath,
   Method,
   Property,
+} from '@jsii/spec';
+import {
+  loadAssemblyFromPath,
   TypeKind,
 } from '@jsii/spec';
 

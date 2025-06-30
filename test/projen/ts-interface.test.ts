@@ -1,4 +1,5 @@
-import { InterfaceType, TypeKind } from '@jsii/spec';
+import type { InterfaceType } from '@jsii/spec';
+import { TypeKind } from '@jsii/spec';
 import { Project } from 'projen';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { TypeScriptInterfaceFile } from '../../src';

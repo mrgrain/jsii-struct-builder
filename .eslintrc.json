@@ -210,14 +210,15 @@
         ]
       }
     ],
-    "eol-last": [
+    "@stylistic/eol-last": [
       "error",
       "always"
     ],
-    "space-in-parens": [
+    "@stylistic/space-in-parens": [
       "error",
       "never"
-    ]
+    ],
+    "@typescript-eslint/consistent-type-imports": "error"
   },
   "overrides": [
     {

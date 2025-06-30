@@ -1,6 +1,8 @@
-import { InterfaceType } from '@jsii/spec';
-import { Project, SourceCodeOptions, TextFile } from 'projen';
-import { TypeScriptRenderer, TypeScriptRendererOptions } from '../renderer';
+import type { InterfaceType } from '@jsii/spec';
+import type { Project, SourceCodeOptions } from 'projen';
+import { TextFile } from 'projen';
+import type { TypeScriptRendererOptions } from '../renderer';
+import { TypeScriptRenderer } from '../renderer';
 
 /**
  * Options for `TypeScriptInterfaceFile`.
