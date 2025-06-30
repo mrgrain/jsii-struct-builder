@@ -3,9 +3,9 @@ import { join } from 'path';
 import { PrimitiveType, Stability } from '@jsii/spec';
 import { JsiiProject } from 'projen/lib/cdk';
 import { NodePackageManager } from 'projen/lib/javascript';
+import type { TypeScriptProjectOptions } from 'projen/lib/typescript';
 import {
   TypeScriptProject,
-  TypeScriptProjectOptions,
 } from 'projen/lib/typescript';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { Struct, ProjenStruct } from '../../src';

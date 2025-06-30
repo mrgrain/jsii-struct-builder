@@ -1,15 +1,17 @@
-import {
-  CollectionKind,
+import type {
   Docs,
   InterfaceType,
+  Property,
+  TypeReference,
+} from '@jsii/spec';
+import {
+  CollectionKind,
   isCollectionTypeReference,
   isNamedTypeReference,
   isPrimitiveTypeReference,
   isUnionTypeReference,
-  Property,
-  TypeReference,
 } from '@jsii/spec';
-import { HasStructSpec } from '../builder';
+import type { HasStructSpec } from '../builder';
 import { compareLowerCase, comparePath } from '../private';
 
 /**

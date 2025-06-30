@@ -1,13 +1,18 @@
 import { dirname, join, posix } from 'path';
-import { Docs, Property, TypeKind } from '@jsii/spec';
-import { Component, typescript } from 'projen';
-import { TypeScriptInterfaceFile, TypeScriptInterfaceFileOptions } from './ts-interface';
-import {
-  Struct,
+import type { Docs, Property } from '@jsii/spec';
+import { TypeKind } from '@jsii/spec';
+import type { typescript } from 'projen';
+import { Component } from 'projen';
+import type { TypeScriptInterfaceFileOptions } from './ts-interface';
+import { TypeScriptInterfaceFile } from './ts-interface';
+import type {
   HasProperties,
   IStructBuilder,
   HasFullyQualifiedName,
   HasStructSpec,
+} from '../builder';
+import {
+  Struct,
 } from '../builder';
 
 export interface ProjenStructOptions {

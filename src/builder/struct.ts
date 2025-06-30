@@ -1,4 +1,5 @@
-import { InterfaceType, Property, TypeKind } from '@jsii/spec';
+import type { InterfaceType, Property } from '@jsii/spec';
+import { TypeKind } from '@jsii/spec';
 import { findInterface } from '../private';
 
 /**
