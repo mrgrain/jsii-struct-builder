@@ -604,6 +604,17 @@ export interface TypeScriptProjectOptions {
    */
   readonly releaseBranches?: Record<string, release.BranchOptions>;
   /**
+   * The GitHub Actions environment used for the release.
+   * This can be used to add an explicit approval step to the release
+   * or limit who can initiate a release through environment protection rules.
+   *
+   * When multiple artifacts are released, the environment can be overwritten
+   * on a per artifact basis.
+   * @default - no environment used, unless set at the artifact level
+   * @stability experimental
+   */
+  readonly releaseEnvironment?: string;
+  /**
    * Automatically release new versions every commit to one of branches in \`releaseBranches\`.
    * @default true
    * @deprecated Use \`releaseTrigger: ReleaseTrigger.continuous()\` instead
