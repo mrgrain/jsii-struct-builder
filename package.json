@@ -45,8 +45,8 @@
     "jest": "^29.7.0",
     "jest-junit": "^16",
     "mrpj": "^0.2.4",
-    "projen": "^0.96.1",
-    "ts-jest": "^29.4.1",
+    "projen": "^0.96.3",
+    "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "5.8.x"
   },
