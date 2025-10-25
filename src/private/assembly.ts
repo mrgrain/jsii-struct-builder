@@ -23,7 +23,7 @@ function loadAssemblyByName(asm: string): Assembly {
 }
 
 function loadAssemblyFromDirectory(asm: string, dir: string): Assembly {
-  const assembly = loadAssemblyFromPath(dir, false);
+  const assembly = loadAssemblyFromPath(dir, false, ['intersection-types', 'class-covariant-overrides']);
   if (assembly.name !== asm) {
     throw `jsii assembly ${asm} not found in ${join(dir, DOT_JSII)}, got: ${assembly.name}`;
   }
