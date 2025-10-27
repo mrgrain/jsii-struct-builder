@@ -55,4 +55,5 @@ junit.xml
 !/images/wordmark-dynamic.svg
 !/.nvmrc
 !/.node-version
+!/.github/workflows/self-mutation.yml
 !/.projenrc.ts
