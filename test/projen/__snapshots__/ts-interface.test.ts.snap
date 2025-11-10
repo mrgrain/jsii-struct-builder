@@ -721,6 +721,21 @@ export interface TypeScriptProjectOptions {
    */
   readonly artifactsDirectory?: string;
   /**
+   * Run security audit on dependencies.
+   * When enabled, creates an "audit" task that checks for known security vulnerabilities
+   * in dependencies. By default, runs during every build and checks for "high" severity
+   * vulnerabilities or above in all dependencies (including dev dependencies).
+   * @default false
+   * @stability experimental
+   */
+  readonly auditDeps?: boolean;
+  /**
+   * Security audit options.
+   * @default - default options
+   * @stability experimental
+   */
+  readonly auditDepsOptions?: javascript.AuditOptions;
+  /**
    * Automatically approve deps upgrade PRs, allowing them to be merged by mergify (if configued).
    * Throw if set to true but \`autoApproveOptions\` are not defined.
    * @default - true
