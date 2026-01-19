@@ -54,6 +54,12 @@ export interface TypeScriptProjectOptions {
    */
   readonly parent?: Project;
   /**
+   * Generate a project tree file (\`.projen/tree.json\`) that shows all components and their relationships. Useful for understanding your project structure and debugging.
+   * @default false
+   * @stability experimental
+   */
+  readonly projectTree?: boolean;
+  /**
    * The shell command to use in order to run the projen CLI.
    * Can be used to customize in special environments.
    * @default "npx projen"
