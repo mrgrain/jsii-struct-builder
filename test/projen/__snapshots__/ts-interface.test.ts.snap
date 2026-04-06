@@ -207,6 +207,12 @@ export interface TypeScriptProjectOptions {
    */
   readonly vscode?: boolean;
   /**
+   * Automatically add the resolved \`packageManager\` to \`devEngines.packageManager\` in \`package.json\`, setting \`onFail\` to \`ignore\`.
+   * @default true
+   * @stability experimental
+   */
+  readonly addPackageManagerToDevEngines?: boolean;
+  /**
    * Allow the project to include \`peerDependencies\` and \`bundledDependencies\`.
    * This is normally only allowed for libraries. For apps, there's no meaning
    * for specifying these.
@@ -287,6 +293,16 @@ export interface TypeScriptProjectOptions {
    */
   readonly codeArtifactOptions?: javascript.CodeArtifactOptions;
   /**
+   * Automatically delete lockfiles from package managers that are not the active one.
+   * Only triggered when the lockfile for the configured package
+   * manager already exists.
+   *
+   * This is useful when migrating between package managers to avoid conflicts.
+   * @default true
+   * @stability experimental
+   */
+  readonly deleteOrphanedLockFiles?: boolean;
+  /**
    * Runtime dependencies of this module.
    * The recommendation is to only specify the module name here (e.g.
    * \`express\`). This will behave similar to \`yarn add\` or \`npm install\` in the
@@ -324,6 +340,14 @@ export interface TypeScriptProjectOptions {
    * @featured true
    */
   readonly devDeps?: Array<string>;
+  /**
+   * Configure the \`devEngines\` field in \`package.json\`.
+   * The \`devEngines.packageManager\` field is automatically populated based on
+   * the resolved \`packageManager\` value. Any fields provided here are merged
+   * with the auto-populated \`packageManager\` entry.
+   * @stability experimental
+   */
+  readonly devEngines?: javascript.DevEngines;
   /**
    * Module entrypoint (\`main\` in \`package.json\`).
    * Set to an empty string to not include \`main\` in your package.json
@@ -428,8 +452,9 @@ export interface TypeScriptProjectOptions {
   readonly npmTrustedPublishing?: boolean;
   /**
    * The Node Package Manager used to execute scripts.
-   * @default NodePackageManager.YARN_CLASSIC
+   * @default - Detected from the calling process or \`YARN_CLASSIC\` if detection fails.
    * @stability experimental
+   * @pjnew $PACKAGE_MANAGER
    */
   readonly packageManager?: javascript.NodePackageManager;
   /**
