@@ -54,7 +54,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.128.0"
+    "@jsii/spec": "^1.129.0"
   },
   "engines": {
     "node": ">=18"
