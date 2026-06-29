@@ -924,7 +924,7 @@ export interface TypeScriptProjectOptions {
    */
   readonly disableTsconfig?: boolean;
   /**
-   * Do not generate a \`tsconfig.dev.json\` file.
+   * Do not generate a development tsconfig file.
    * @default false
    * @stability experimental
    */
@@ -1012,8 +1012,11 @@ export interface TypeScriptProjectOptions {
    */
   readonly tsconfigDev?: javascript.TypescriptConfigOptions;
   /**
-   * The name of the development tsconfig.json file.
-   * @default "tsconfig.dev.json"
+   * The name (and path) of the development tsconfig file.
+   * By default this lives inside the test directory (e.g. \`test/tsconfig.json\`)
+   * so that the TypeScript language service resolves it as the nearest config
+   * for test files.
+   * @default - "{testdir}/tsconfig.json"
    * @stability experimental
    */
   readonly tsconfigDevFile?: string;
