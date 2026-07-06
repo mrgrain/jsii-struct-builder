@@ -1,14 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`can render a struct directly 1`] = `
-"
+"import type { typescript } from 'projen';
+
 export interface MyFunctionProps {
   /**
    * Whether to use \`SWC\` for ts-node.
    * @default false
-   * @stability experimental
+   * @deprecated Use \`runner: TypeScriptRunner.tsNode({ swc: true })\` instead.
+   * @stability deprecated
    */
   readonly swc?: boolean;
+  /**
+   * The runner to use for executing TypeScript files.
+   * @default - the project's runner
+   * @stability experimental
+   */
+  readonly runner?: typescript.TypeScriptRunner;
   /**
    * A directory tree that may contain *.ts files that can be referenced from your projenrc typescript file.
    * @default "projenrc"
