@@ -8,6 +8,7 @@
   "scripts": {
     "build": "projen build",
     "bump": "projen bump",
+    "bump:releasable-commits": "projen bump:releasable-commits",
     "clobber": "projen clobber",
     "compile": "projen compile",
     "default": "projen default",
@@ -45,7 +46,7 @@
     "jest": "^29.7.0",
     "jest-junit": "^17",
     "mrpj": "^0.2.11",
-    "projen": "^0.101.11",
+    "projen": "^0.101.16",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
     "typescript": "5.9.x"
@@ -54,7 +55,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.138.0"
+    "@jsii/spec": "^1.139.0"
   },
   "engines": {
     "node": ">=18"
