@@ -61,6 +61,10 @@ export interface TypeScriptProjectOptions {
   readonly projectTree?: boolean;
   /**
    * The shell command to use in order to run the projen CLI.
+   * Inserted verbatim into task steps, workflows and IDE configuration, and run
+   * by each of their shells - locally, in CI and in dev containers. Keep it a
+   * plain unquoted command, since shell syntax in it executes in all of them.
+   *
    * Can be used to customize in special environments.
    * @default "npx projen"
    * @stability experimental
@@ -722,14 +726,16 @@ export interface TypeScriptProjectOptions {
   /**
    * Github Runner selection labels.
    * @default ["ubuntu-latest"]
-   * @stability experimental
+   * @deprecated use \`githubOptions.workflowRunsOn\` on the project, or \`runsOn\` on \`ReleaseOptions\`
+   * @stability deprecated
    * @description Defines a target Runner by labels
    * @throws {Error} if both \`runsOn\` and \`runsOnGroup\` are specified
    */
   readonly workflowRunsOn?: Array<string>;
   /**
    * Github Runner Group selection options.
-   * @stability experimental
+   * @deprecated use \`githubOptions.workflowRunsOnGroup\` on the project, or \`runsOnGroup\` on \`ReleaseOptions\`
+   * @stability deprecated
    * @description Defines a target Runner Group by name and/or labels
    * @throws {Error} if both \`runsOn\` and \`runsOnGroup\` are specified
    */
@@ -798,7 +804,9 @@ export interface TypeScriptProjectOptions {
    */
   readonly checkLicenses?: javascript.LicenseCheckerOptions;
   /**
-   * Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v5 By default, OIDC auth is used. Alternatively a token can be provided via \`codeCovTokenSecret\`.
+   * Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/.
+   * Uses codecov/codecov-action. By default, OIDC auth is used.
+   * Alternatively a token can be provided via \`codeCovTokenSecret\`.
    * @default false
    * @stability experimental
    */
