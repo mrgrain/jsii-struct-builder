@@ -46,7 +46,7 @@
     "jest": "^29.7.0",
     "jest-junit": "^17",
     "mrpj": "^0.2.11",
-    "projen": "^0.103.1",
+    "projen": "^0.103.11",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "typescript": "5.9.x"
@@ -55,7 +55,7 @@
     "projen": "x.x.x"
   },
   "dependencies": {
-    "@jsii/spec": "^1.139.0"
+    "@jsii/spec": "^1.140.0"
   },
   "engines": {
     "node": ">=18"
