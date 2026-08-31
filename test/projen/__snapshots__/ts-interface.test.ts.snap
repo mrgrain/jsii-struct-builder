@@ -1104,6 +1104,13 @@ export interface TypeScriptProjectOptions {
    */
   readonly tsJestOptions?: typescript.TsJestOptions;
   /**
+   * Type-check the test suite as part of the \`test\` task.
+   * Adds a \`tsc --noEmit\` step against the development tsconfig.
+   * @default false
+   * @stability experimental
+   */
+  readonly typecheckTests?: boolean;
+  /**
    * TypeScript version to use.
    * NOTE: Typescript is not semantically versioned and should remain on the
    * same minor, so we recommend using a \`~\` dependency (e.g. \`~1.2.3\`).
