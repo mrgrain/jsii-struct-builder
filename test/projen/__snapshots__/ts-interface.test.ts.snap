@@ -504,6 +504,13 @@ export interface TypeScriptProjectOptions {
    */
   readonly packageName?: string;
   /**
+   * Additional information about how peer dependencies are used, rendered as \`peerDependenciesMeta\` in \`package.json\`. For example, this can mark peer dependencies as optional.
+   * Each key must also be declared as a peer dependency.
+   * @default - no \`peerDependenciesMeta\`
+   * @stability experimental
+   */
+  readonly peerDependenciesMeta?: Record<string, javascript.PeerDependencyMeta>;
+  /**
    * Options for \`peerDeps\`.
    * @stability experimental
    */
